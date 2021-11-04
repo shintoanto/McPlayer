@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         MusicListMA = getAllAudio()
         val musicList = ArrayList<String>()
         musicList.add("First song")
-        musicList.add("secnd song")
+        musicList.add("second song")
 
         binding.musicRv.setHasFixedSize(true)
         binding.musicRv.setItemViewCacheSize(13)
