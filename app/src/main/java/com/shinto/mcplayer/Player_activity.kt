@@ -18,6 +18,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection {
     companion object {
         lateinit var musicListPA: ArrayList<Music>
         var songPosition: Int = 0
+
         //        var mediaPlayer: MediaPlayer? = null
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
@@ -37,15 +38,15 @@ class Player_activity : AppCompatActivity(), ServiceConnection {
             if (isPlaying) pauseMusic()
             else playMusic()
         }
-        //   binding.seekBarPA.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-//            override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
-//                if (fromUser)
-//            }
-//
-//            override fun onStartTrackingTouch(p0: SeekBar?) = Unit
-//
-//            override fun onStopTrackingTouch(p0: SeekBar?) = Unit
-//        })
+        binding.seekBarPA.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) musicService!!.mediaPlayer!!.seekTo(progress)
+            }
+
+            override fun onStartTrackingTouch(p0: SeekBar?) = Unit
+
+            override fun onStopTrackingTouch(p0: SeekBar?) = Unit
+        })
     }
 
     private fun setLayout() {
@@ -65,6 +66,10 @@ class Player_activity : AppCompatActivity(), ServiceConnection {
             musicService!!.mediaPlayer!!.prepare()
             musicService!!.mediaPlayer!!.start()
             binding.playPauseButton.setIconResource(R.drawable.pause)
+            binding.seekBarStartPA.text= formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text= formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+            binding.seekBarPA.progress=0
+            binding.seekBarPA.max= musicService!!.mediaPlayer!!.duration
         } catch (e: Exception) {
             return
         }
