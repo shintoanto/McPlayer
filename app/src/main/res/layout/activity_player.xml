@@ -33,18 +33,17 @@
             android:src="@drawable/shuffle" />
 
     </LinearLayout>
-
+<!--current song image-->
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/songImgPA"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:src="@drawable/shuffle" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp" />
 
+    <!--current song name-->
     <TextView
+        android:id="@+id/songNamePA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
@@ -59,6 +58,7 @@
         android:gravity="center"
         android:orientation="horizontal">
 
+<!--       Previous button -->
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="30dp"
             android:layout_height="wrap_content"
@@ -69,6 +69,7 @@
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="30dp"
+            android:id="@+id/playPauseButton"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="25dp"
             app:icon="@drawable/shuffle"
@@ -88,18 +89,24 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
+            android:text="00:00"
+            android:gravity="center"
             android:textColor="@color/black"
             android:textSize="15sp" />
 
         <SeekBar
             android:layout_width="0dp"
+            android:id="@+id/seekBarPA"
             android:layout_weight="1"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:ignore="NestedWeights" />
 
         <TextView
             android:layout_width="wrap_content"
+            android:text="00:00"
+            android:gravity="center"
             android:layout_height="match_parent"
             android:textColor="@color/black"
             android:textSize="15sp" />

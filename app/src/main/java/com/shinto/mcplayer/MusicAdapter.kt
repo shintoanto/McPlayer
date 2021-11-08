@@ -21,7 +21,6 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
         val root = binding.root
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicAdapter.MyHolder {
         return MyHolder(MusicViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
@@ -30,12 +29,15 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
+
+        // image fetching and setting in music
         Glide.with(context).load(musicList[position].artUri)
             .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).into(holder.image)
+
         holder.root.setOnClickListener {
             val intent = Intent(context, Player_activity::class.java)
-            intent.putExtra("index",position)
-            intent.putExtra("class","MusicAdapter")
+            intent.putExtra("index", position)
+            intent.putExtra("class", "MusicAdapter")
             ContextCompat.startActivity(context, intent, null)
         }
     }
