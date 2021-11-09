@@ -66,6 +66,7 @@ class MusicService : Service() {
         runnable = Runnable {
            Player_activity.binding.seekBarStartPA.text = formatDuration(mediaPlayer!!.currentPosition.toLong())
             Player_activity.binding.seekBarPA.progress = mediaPlayer!!.currentPosition
+            Player_activity.binding.seekBarPA.max=mediaPlayer!!.duration
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)

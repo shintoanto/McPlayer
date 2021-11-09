@@ -40,8 +40,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             else playMusic()
         }
         binding.seekBarPA.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) musicService!!.mediaPlayer!!.seekTo(progress)
+            override fun onProgressChanged(p0: SeekBar?, position: Int, fromUser: Boolean) {
+                if (fromUser) musicService!!.mediaPlayer!!.seekTo(position)
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) = Unit
