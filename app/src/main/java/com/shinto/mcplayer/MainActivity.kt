@@ -8,6 +8,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MenuItem
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -31,7 +32,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requstRuntimePermission()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -39,20 +39,17 @@ class MainActivity : AppCompatActivity() {
         binding.root.addDrawerListener(toggle)
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        MusicListMA = getAllAudio()
-        val musicList = ArrayList<String>()
-        musicList.add("First song")
-        musicList.add("second song")
 
-        binding.musicRv.setHasFixedSize(true)
-        binding.musicRv.setItemViewCacheSize(13)
-        binding.musicRv.layoutManager = LinearLayoutManager(this@MainActivity)
-        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
-        binding.musicRv.adapter = musicAdapter
-        binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
+        if ( requstRuntimePermission())
+            initializeLayout()
+
 
         binding.shufflebtn.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Text button clicked", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@MainActivity, "Shuffle   button clicked", Toast.LENGTH_SHORT).show()
+            Log.d("i", "index")
+            intent.putExtra("index", 0)
+            intent.putExtra("class", "MainActivity")
+
         }
 
         binding.favouriteBtn.setOnClickListener {
@@ -64,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 //            val intent= Intent(this@MainActivity,Player_activity::class.java)
 //            startActivity(intent)
 //        }
+
 
         binding.navView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -77,7 +75,21 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun requstRuntimePermission() {
+    private fun initializeLayout() {
+        MusicListMA = getAllAudio()
+        val musicList = ArrayList<String>()
+        musicList.add("First song")
+        musicList.add("second song")
+
+        binding.musicRv.setHasFixedSize(true)
+        binding.musicRv.setItemViewCacheSize(13)
+        binding.musicRv.layoutManager = LinearLayoutManager(this@MainActivity)
+        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
+        binding.musicRv.adapter = musicAdapter
+        binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
+    }
+
+    private fun requstRuntimePermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -89,8 +101,9 @@ class MainActivity : AppCompatActivity() {
                 arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 13
             )
+            return false
         }
-
+        return true
     }
 
     override fun onRequestPermissionsResult(
@@ -100,14 +113,16 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 13) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "", Toast.LENGTH_LONG).show()
+                initializeLayout()
+            }
             else
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    13
-                )
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                13
+            )
         }
     }
 
@@ -117,12 +132,7 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-
-    private fun initLayout() {
-
-    }
-
-  // @SuppressLint("Range")
+    // @SuppressLint("Range")
     private fun getAllAudio(): ArrayList<Music> {
         val tempList = ArrayList<Music>()
         // selection is using athe type data ane anne ariyan
@@ -142,8 +152,8 @@ class MainActivity : AppCompatActivity() {
 //            selection, null, MediaStore.Audio.Media.DATE_ADDED + "DESC", null
 //        )
 
-        val cursor : Cursor? = this.contentResolver.query(
-            selection,projection,null ,null, MediaStore.Audio.Media.TITLE
+        val cursor: Cursor? = this.contentResolver.query(
+            selection, projection, null, null, MediaStore.Audio.Media.TITLE
         )
 
         if (cursor != null) {
@@ -160,9 +170,9 @@ class MainActivity : AppCompatActivity() {
                     val durationC =
                         cursor.getLong(4)
                     val pathC = cursor.getString(6)
-                    val albumIdC=cursor.getString(7)
-                    val uri= Uri.parse("content://media/external/audio/albumart")
-                    val artUriC = Uri.withAppendedPath(uri,albumIdC).toString()
+                    val albumIdC = cursor.getString(7)
+                    val uri = Uri.parse("content://media/external/audio/albumart")
+                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
 
                     val music = Music(
                         id = idC,

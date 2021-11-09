@@ -21,3 +21,17 @@ fun formatDuration(duration: Long): String {
     )) - minutes * TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES)
     return String.format("%02d:%02d", minutes, seconds)
 }
+
+fun setSongPosition(increment: Boolean) {
+    if (increment) {
+        if (Player_activity.musicListPA.size - 1 == Player_activity.songPosition)
+            Player_activity.songPosition = 0
+        else
+            ++Player_activity.songPosition
+    } else {
+        if (0 == Player_activity.songPosition)
+            Player_activity.songPosition = Player_activity.musicListPA.size - 1
+        else
+            --Player_activity.songPosition
+    }
+}

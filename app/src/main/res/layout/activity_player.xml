@@ -34,24 +34,28 @@
 
     </LinearLayout>
 <!--current song image-->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/songImgPA"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:src="@drawable/shuffle" />
 
 
     <!--current song name-->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/songImgPA"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="250dp" />
+
     <TextView
+        android:layout_marginTop="30dp"
         android:id="@+id/songNamePA"
-        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:text="song name"
         android:textAlignment="center"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
     <LinearLayout
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -62,46 +66,46 @@
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            app:icon="@drawable/shuffle"
+            app:icon="@drawable/previews"
+            android:id="@+id/previewsBtnPA"
             app:shapeAppearance="@style/curved"
             app:strokeColor="#5E78D8" />
-
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="30dp"
             android:id="@+id/playPauseButton"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="25dp"
-            app:icon="@drawable/shuffle"
+            app:icon="@drawable/play"
             app:shapeAppearance="@style/curved" />
-
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:layout_width="30dp"
+            android:id="@+id/nextBtnPA"
             android:layout_height="wrap_content"
-            app:icon="@drawable/shuffle" />
+            app:icon="@drawable/next" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/seekBarStartPA"
             android:layout_width="50dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="00:00"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="15sp" />
 
-        <SeekBar
+        <androidx.appcompat.widget.AppCompatSeekBar
             android:layout_width="0dp"
             android:id="@+id/seekBarPA"
             android:layout_weight="1"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             tools:ignore="NestedWeights" />
 
         <TextView
@@ -109,7 +113,7 @@
             android:layout_width="wrap_content"
             android:text="00:00"
             android:gravity="center"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:textSize="15sp" />
     </LinearLayout>

@@ -13,23 +13,24 @@ import com.bumptech.glide.request.RequestOptions
 import com.shinto.mcplayer.databinding.ActivityPlayerBinding
 import java.util.Collections.addAll
 
-class Player_activity : AppCompatActivity(), ServiceConnection {
+class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
     companion object {
         lateinit var musicListPA: ArrayList<Music>
         var songPosition: Int = 0
 
-        //        var mediaPlayer: MediaPlayer? = null
+        var mediaPlayer: MediaPlayer? = null
         var isPlaying: Boolean = false
         var musicService: MusicService? = null
+        lateinit var binding: ActivityPlayerBinding
     }
 
-    private lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // starting service
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, this, BIND_AUTO_CREATE)
         startService(intent)
@@ -47,6 +48,9 @@ class Player_activity : AppCompatActivity(), ServiceConnection {
 
             override fun onStopTrackingTouch(p0: SeekBar?) = Unit
         })
+
+        binding.previewsBtnPA.setOnClickListener { prevNextBtn(increment = false) }
+        binding.nextBtnPA.setOnClickListener { prevNextBtn(increment = true) }
     }
 
     private fun setLayout() {
@@ -58,30 +62,21 @@ class Player_activity : AppCompatActivity(), ServiceConnection {
         binding.songNamePA.text = musicListPA[songPosition].title
     }
 
-    private fun createMediaPlayer() {
-        try {
-            if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
-            musicService!!.mediaPlayer!!.reset()
-            musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
-            musicService!!.mediaPlayer!!.prepare()
-            musicService!!.mediaPlayer!!.start()
-            binding.playPauseButton.setIconResource(R.drawable.pause)
-            binding.seekBarStartPA.text= formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-            binding.seekBarEndPA.text= formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
-            binding.seekBarPA.progress=0
-            binding.seekBarPA.max= musicService!!.mediaPlayer!!.duration
-        } catch (e: Exception) {
-            return
-        }
-    }
 
-    private fun initializeLayout() {
+     fun initializeLayout() {
         songPosition = intent.getIntExtra("index", 0)
         when (intent.getStringExtra("class")) {
             "MusicAdapter" -> {
                 musicListPA = ArrayList()
                 musicListPA.addAll(MainActivity.MusicListMA)
                 setLayout()
+            }
+            "MainActivity"->{
+                musicListPA= ArrayList()
+                musicListPA.addAll(MainActivity.MusicListMA)
+                musicListPA.shuffle()
+                setLayout()
+                createMediaPlayer()
             }
         }
     }
@@ -94,17 +89,73 @@ class Player_activity : AppCompatActivity(), ServiceConnection {
 
     private fun pauseMusic() {
         binding.playPauseButton.setIconResource(R.drawable.play)
-        isPlaying = false
         musicService!!.mediaPlayer!!.pause()
+        isPlaying = false
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder = service as MusicService.MyBinder
         musicService = binder.currentService()
         createMediaPlayer()
+        musicService!!.seekBarSetup()
+
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
         musicService = null
     }
+
+    private fun createMediaPlayer() {
+        try {
+            if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
+            musicService!!.mediaPlayer!!.reset()
+            musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
+            musicService!!.mediaPlayer!!.prepare()
+            musicService!!.mediaPlayer!!.start()
+            isPlaying=true
+            binding.playPauseButton.setIconResource(R.drawable.pause)
+            binding.seekBarStartPA.text = formatDuration(mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text = formatDuration(mediaPlayer!!.duration.toLong())
+            binding.seekBarPA.progress = 0
+            binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
+            musicService!!.mediaPlayer!!.setOnCompletionListener  (this)
+        } catch (e: Exception) {
+            return
+        }
+    }
+
+    private fun prevNextBtn(increment: Boolean) {
+        if (increment) {
+            setSongPosition(increment = true)
+            ++songPosition
+            setLayout()
+            createMediaPlayer()
+        } else {
+            setSongPosition(increment = false)
+            --songPosition
+            setLayout()
+            createMediaPlayer()
+        }
+
+    }
+
+    private fun setSongPosition(increment: Boolean) {
+        if (increment) {
+            if (musicListPA.size - 1 == songPosition)
+                songPosition = 0
+            else
+                ++songPosition
+        } else {
+            if (0 == songPosition)
+                songPosition = musicListPA.size - 1
+            else
+                --songPosition
+        }
+    }
+
+    override fun onCompletion(p0: MediaPlayer?) {
+        setSongPosition(increment = true)
+        createMediaPlayer()
+    }
+
 }
