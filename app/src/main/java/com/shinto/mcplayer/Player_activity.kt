@@ -11,10 +11,9 @@ import android.widget.SeekBar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shinto.mcplayer.databinding.ActivityPlayerBinding
-import java.util.Collections.addAll
 
 class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
-
+// normal object aakuka
     companion object {
         lateinit var musicListPA: ArrayList<Music>
         var songPosition: Int = 0
@@ -24,7 +23,6 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         var musicService: MusicService? = null
         lateinit var binding: ActivityPlayerBinding
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +47,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             override fun onStopTrackingTouch(p0: SeekBar?) = Unit
         })
 
-        binding.previewsBtnPA.setOnClickListener { prevNextBtn(increment = false) }
-        binding.nextBtnPA.setOnClickListener { prevNextBtn(increment = true) }
+//        binding.previewsBtnPA.setOnClickListener { prevNextBtn(increment = false) }
+//        binding.nextBtnPA.setOnClickListener { prevNextBtn(increment = true) }
     }
 
     private fun setLayout() {
@@ -98,7 +96,6 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         musicService = binder.currentService()
         createMediaPlayer()
         musicService!!.seekBarSetup()
-
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {

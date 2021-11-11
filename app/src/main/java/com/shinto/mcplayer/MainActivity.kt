@@ -1,24 +1,19 @@
 package com.shinto.mcplayer
 
-import android.annotation.SuppressLint
-import android.content.Intent
+
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MenuItem
-import android.widget.LinearLayout
 import android.widget.Toast
-import android.widget.ToggleButton
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shinto.mcplayer.databinding.ActivityMainBinding
 import java.io.File
-import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,22 +35,21 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if ( requstRuntimePermission())
+        if (requestRuntimePermission())
             initializeLayout()
 
+//        binding.shufflebtn.setOnClickListener {
+//            Toast.makeText(this@MainActivity, "Shuffle   button clicked", Toast.LENGTH_SHORT).show()
+//            Log.d("i", "index")
+//            intent.putExtra("index", 0)
+//            intent.putExtra("class", "MainActivity")
+//
+//        }
 
-        binding.shufflebtn.setOnClickListener {
-            Toast.makeText(this@MainActivity, "Shuffle   button clicked", Toast.LENGTH_SHORT).show()
-            Log.d("i", "index")
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "MainActivity")
-
-        }
-
-        binding.favouriteBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, Favourite::class.java)
-            startActivity(intent)
-        }
+//        binding.favouriteBtn.setOnClickListener {
+//            val intent = Intent(this@MainActivity, Favourite::class.java)
+//            startActivity(intent)
+//        }
 
 //        binding.playlistBtn.setOnClickListener {
 //            val intent= Intent(this@MainActivity,Player_activity::class.java)
@@ -72,7 +66,6 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
     }
 
     private fun initializeLayout() {
@@ -84,15 +77,16 @@ class MainActivity : AppCompatActivity() {
         binding.musicRv.setHasFixedSize(true)
         binding.musicRv.setItemViewCacheSize(13)
         binding.musicRv.layoutManager = LinearLayoutManager(this@MainActivity)
+
+        // pass the activity to music adapter
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
         binding.musicRv.adapter = musicAdapter
-        binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
+        // binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
     }
 
-    private fun requstRuntimePermission(): Boolean {
+    private fun requestRuntimePermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -114,15 +108,14 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 13) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Result granted", Toast.LENGTH_LONG).show()
                 initializeLayout()
-            }
-            else
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                13
-            )
+            } else
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    13
+                )
         }
     }
 
@@ -132,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    // @SuppressLint("Range")
+
     private fun getAllAudio(): ArrayList<Music> {
         val tempList = ArrayList<Music>()
         // selection is using athe type data ane anne ariyan
@@ -157,12 +150,14 @@ class MainActivity : AppCompatActivity() {
         )
 
         if (cursor != null) {
+            //Calling moveToFirst() does two things: it allows you to test whether
+                // the query returned an empty set (by testing the return value) and it moves the
+                    // cursor to the first result (when the set is not empty).
             if (cursor.moveToFirst())
                 do {
                     val idC = cursor.getString(0)
                     val titleC =
                         cursor.getString(1)
-
                     val albumC =
                         cursor.getString(2)
                     val artistC =

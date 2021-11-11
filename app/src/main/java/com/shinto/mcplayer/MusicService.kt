@@ -18,6 +18,7 @@ class MusicService : Service() {
         return myBinder
     }
 
+// Pass the context
     inner class MyBinder : Binder() {
         fun currentService(): MusicService {
             return this@MusicService
