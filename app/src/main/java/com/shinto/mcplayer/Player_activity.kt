@@ -96,6 +96,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         musicService = binder.currentService()
         createMediaPlayer()
         musicService!!.seekBarSetup()
+        musicService!!.showNotification()
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
