@@ -98,7 +98,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         musicService = binder.currentService()
         createMediaPlayer()
         musicService!!.seekBarSetup()
-        musicService!!.showNotification(R.drawable.pause)
+
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
@@ -118,6 +118,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             binding.seekBarEndPA.text = formatDuration(mediaPlayer!!.duration.toLong())
             binding.seekBarPA.progress = 0
             binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
+            musicService!!.showNotification(R.drawable.pause)
             musicService!!.mediaPlayer!!.setOnCompletionListener  (this)
         } catch (e: Exception) {
             return
@@ -127,12 +128,12 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
     private fun prevNextBtn(increment: Boolean) {
         if (increment) {
             setSongPosition(increment = true)
-            ++songPosition
+           // ++songPosition
             setLayout()
             createMediaPlayer()
         } else {
             setSongPosition(increment = false)
-            --songPosition
+           // --songPosition
             setLayout()
             createMediaPlayer()
         }

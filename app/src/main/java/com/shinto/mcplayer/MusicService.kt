@@ -1,12 +1,9 @@
 package com.shinto.mcplayer
 
-import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.BitmapRegionDecoder
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
@@ -49,7 +46,7 @@ class MusicService : Service() {
         val exitPendingInt=PendingIntent.getBroadcast(baseContext,0,exitIntent,PendingIntent.FLAG_UPDATE_CURRENT)
 
         val imgArt = getImgArt(Player_activity.musicListPA[Player_activity.songPosition].path)
-       val img=  if (imgArt != null){
+        val img=  if (imgArt != null){
                 BitmapFactory.decodeByteArray(imgArt,0,imgArt.size)
         }else{
             BitmapFactory.decodeResource(resources, R.drawable.mj)

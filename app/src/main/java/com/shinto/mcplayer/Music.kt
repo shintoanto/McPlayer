@@ -37,7 +37,7 @@ fun setSongPosition(increment: Boolean) {
     }
 }
 
-fun getImgArt(path: String):ByteArray?{
+fun getImgArt(path: String): ByteArray? {
     val retriever = MediaMetadataRetriever()
     retriever.setDataSource(path)
     return retriever.embeddedPicture
