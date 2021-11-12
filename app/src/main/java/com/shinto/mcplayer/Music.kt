@@ -1,5 +1,6 @@
 package com.shinto.mcplayer
 
+import android.media.MediaMetadataRetriever
 import java.util.concurrent.TimeUnit
 
 
@@ -34,4 +35,10 @@ fun setSongPosition(increment: Boolean) {
         else
             --Player_activity.songPosition
     }
+}
+
+fun getImgArt(path: String):ByteArray?{
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(path)
+    return retriever.embeddedPicture
 }

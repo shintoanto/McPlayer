@@ -81,12 +81,14 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 
     private fun playMusic() {
         binding.playPauseButton.setIconResource(R.drawable.pause)
+        musicService!!.showNotification(R.drawable.pause)
         isPlaying = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
         binding.playPauseButton.setIconResource(R.drawable.play)
+        musicService!!.showNotification(R.drawable.play)
         musicService!!.mediaPlayer!!.pause()
         isPlaying = false
     }
@@ -96,7 +98,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         musicService = binder.currentService()
         createMediaPlayer()
         musicService!!.seekBarSetup()
-        musicService!!.showNotification()
+        musicService!!.showNotification(R.drawable.pause)
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {

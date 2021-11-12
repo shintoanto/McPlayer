@@ -1,10 +1,12 @@
 package com.shinto.mcplayer
 
 import android.app.Notification
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.BitmapRegionDecoder
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
@@ -32,20 +34,40 @@ class MusicService : Service() {
         }
     }
 
-    fun showNotification() {
+    fun showNotification(playPauseButton:Int) {
+
+        val prevIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.PREVIOUS)
+        val prevPendingIntent = PendingIntent.getBroadcast(baseContext,0,prevIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val nextIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.NEXT)
+        val nextPendingInt=PendingIntent.getBroadcast(baseContext,0,nextIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val playIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.PLAY)
+        val playPendingInt=PendingIntent.getBroadcast(baseContext,0,playIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val exitIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.EXIT)
+        val exitPendingInt=PendingIntent.getBroadcast(baseContext,0,exitIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val imgArt = getImgArt(Player_activity.musicListPA[Player_activity.songPosition].path)
+       val img=  if (imgArt != null){
+                BitmapFactory.decodeByteArray(imgArt,0,imgArt.size)
+        }else{
+            BitmapFactory.decodeResource(resources, R.drawable.mj)
+        }
+
         val notification = NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
             .setContentTitle(Player_activity.musicListPA[Player_activity.songPosition].title)
             .setContentText(Player_activity.musicListPA[Player_activity.songPosition].artist)
             .setSmallIcon(R.drawable.favourites)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.play))
+            .setLargeIcon(img)
             .setStyle(androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setOnlyAlertOnce(true)
-            .addAction(R.drawable.previews, "Previous", null)
-            .addAction(R.drawable.play, "Play", null)
-            .addAction(R.drawable.next, "Next", null)
-            .addAction(R.drawable.back, "back", null)
+            .addAction(R.drawable.previews, "Previous",prevPendingIntent )
+            .addAction(playPauseButton, "Play", playPendingInt)
+            .addAction(R.drawable.next, "Next", nextPendingInt)
+            .addAction(R.drawable.back, "exit", exitPendingInt)
             .build()
 
         startForeground(13,notification)
