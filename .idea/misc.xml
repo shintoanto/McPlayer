@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17916666666666667" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/activity_playlist_screen.xml" value="0.19479166666666667" />
+        <entry key="app/src/main/res/layout/bottom_sheet_layout.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/music_view.xml" value="0.33" />
         <entry key="app/src/main/res/layout/nav_header.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/menu/nav_menu.xml" value="0.19479166666666667" />

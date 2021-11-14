@@ -24,17 +24,19 @@ fun formatDuration(duration: Long): String {
 }
 
 fun setSongPosition(increment: Boolean) {
-    if (increment) {
-        if (Player_activity.musicListPA.size - 1 == Player_activity.songPosition)
-            Player_activity.songPosition = 0
-        else
-            ++Player_activity.songPosition
-    } else {
-        if (0 == Player_activity.songPosition)
-            Player_activity.songPosition = Player_activity.musicListPA.size - 1
-        else
-            --Player_activity.songPosition
-    }
+   if (!Player_activity.repeat){
+       if (increment) {
+           if (Player_activity.musicListPA.size - 1 == Player_activity.songPosition)
+               Player_activity.songPosition = 0
+           else
+               ++Player_activity.songPosition
+       } else {
+           if (0 == Player_activity.songPosition)
+               Player_activity.songPosition = Player_activity.musicListPA.size - 1
+           else
+               --Player_activity.songPosition
+       }
+   }
 }
 
 fun getImgArt(path: String): ByteArray? {

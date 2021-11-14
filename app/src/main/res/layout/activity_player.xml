@@ -125,11 +125,13 @@
         android:layout_height="wrap_content">
 
         <ImageButton
+            android:id="@+id/repeatBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/shuffle"/>
+            android:src="@drawable/repeat"/>
 
         <ImageButton
+            android:id="@+id/timerBtnPA"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/shuffle"/>
