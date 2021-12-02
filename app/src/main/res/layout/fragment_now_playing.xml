@@ -30,15 +30,25 @@
             app:shapeAppearanceOverlay="@style/curved" />
 
         <ImageView
+            android:id="@+id/prevtBtnNp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/prev"
+            app:layout_constraintStart_toEndOf="@+id/songNameMp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
             android:id="@+id/playPauseBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="20dp"
+            android:layout_marginStart="31dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="17dp"
             android:src="@drawable/play"
             app:layout_constraintEnd_toStartOf="@+id/nextBtnNp"
-            app:layout_constraintStart_toEndOf="@+id/songNameMp"
+            app:layout_constraintStart_toEndOf="@+id/prevtBtnNp"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -46,10 +56,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:layout_marginEnd="18dp"
             android:src="@drawable/next"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/playPauseBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,8 +68,7 @@
             android:id="@+id/songNameMp"
             android:layout_width="167dp"
             android:layout_height="43dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
             android:ellipsize="marquee"
             android:gravity="center"
             android:marqueeRepeatLimit="marquee_forever"
@@ -66,9 +76,19 @@
             android:text="song name"
             android:textColor="@color/white"
             android:textSize="18dp"
-            app:layout_constraintEnd_toStartOf="@+id/playPauseBtn"
             app:layout_constraintStart_toEndOf="@+id/songImgNp"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/seekBarNow"
+            android:layout_width="290dp"
+            android:layout_height="19dp"
+            android:layout_marginStart="9dp"
+            android:layout_marginEnd="27dp"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/songImgNp"
+            app:layout_constraintTop_toBottomOf="@+id/songNameMp"
+            tools:ignore="NestedWeights" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

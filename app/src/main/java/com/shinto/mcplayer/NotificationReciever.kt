@@ -3,8 +3,10 @@ package com.shinto.mcplayer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import kotlinx.coroutines.withContext
 
 class NotificationReciever : BroadcastReceiver() {
 
@@ -13,7 +15,7 @@ class NotificationReciever : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {
             ApplicationClass.PREVIOUS -> preNextSong(increment = false, contex = context!!)
-            ApplicationClass.PLAY -> if (playerActivity?.isPlaying!!) puaseMusic() else playMusic()
+            ApplicationClass.PLAY -> if (musicService?.mediaPlayer?.isPlaying!!) puaseMusic() else playMusic()
             ApplicationClass.NEXT -> preNextSong(increment = true, contex = context!!)
             ApplicationClass.EXIT -> {
                 exitApplication()
@@ -37,11 +39,19 @@ class NotificationReciever : BroadcastReceiver() {
         nowPlaying?.binding?.playPauseBtn?.setImageResource(R.drawable.play)
 
     }
-
+//  private  fun setLayout() {
+//      //It shows the information in player activity place
+//      Glide.with(view).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
+//          .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
+//              // Image setting
+//          into(playerActivity?.binding!!.songImgPA)
+//      // Text setting
+//      playerActivity?.binding!!.songNamePA.text = musicService?.musicListPA!![musicService?.songPosition!!].title
+//  }
     private fun preNextSong(increment: Boolean, contex: Context) {
         musicService!!.setSongPosition(increment = increment)
         musicService!!.createMediaPlayer()
-
+       // setLayout()
 //        Glide.with(contex).load(musicService!!.musicListPA[musicService?.songPosition!!].artUri)
 //            .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
 //                // Imag setting
@@ -56,6 +66,6 @@ class NotificationReciever : BroadcastReceiver() {
 //        nowPlaying?.binding?.songNameMp?.text =
 //            musicService!!.musicListPA[musicService!!.songPosition].title
         playMusic()
-        musicService!!.prevNextBtn(increment = true,{})
+        musicService!!.prevNextBtn(increment = increment,{})
     }
 }

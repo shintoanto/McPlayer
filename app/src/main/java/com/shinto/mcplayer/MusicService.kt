@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
 import android.net.Uri
@@ -61,12 +62,13 @@ class MusicService : Service(),ServiceConnection {
         val exitIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.EXIT)
         val exitPendingInt=PendingIntent.getBroadcast(baseContext,0,exitIntent,PendingIntent.FLAG_UPDATE_CURRENT)
 
-var img = BitmapFactory.decodeResource(resources, R.drawable.mj)
+
 if(!musicListPA.isEmpty()){
+    var img = BitmapFactory.decodeResource(resources, R.drawable.mj)
     val imgArt = getImgArt(musicListPA[songPosition].path)
      if (imgArt != null) {
          img = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
-
+     }
          val notification = NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
              .setContentTitle(musicListPA[songPosition].title)
              .setContentText(musicListPA[songPosition].artist)
@@ -82,28 +84,22 @@ if(!musicListPA.isEmpty()){
              .addAction(R.drawable.previews, "Previous", prevPendingIntent)
              .addAction(playPauseButton, "Play", playPendingInt)
              .addAction(R.drawable.next, "Next", nextPendingInt)
-             .addAction(R.drawable.back, "exit", exitPendingInt)
+             .addAction(R.drawable.close, "exit", exitPendingInt)
              .build()
          startForeground(13, notification)
-    }
 }
-
-
 
     }
 
     fun createMediaPlayer() {
         try {
-            if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer =
-                MediaPlayer()
+            if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
             musicService!!.mediaPlayer!!.reset()
             musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
             musicService!!.mediaPlayer!!.prepare()
             playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
-            playerActivity?.binding?.seekBarStartPA?.text =
-                formatDuration(mediaPlayer!!.currentPosition.toLong())
-            playerActivity?.binding?.seekBarEndPA?.text =
-                formatDuration(mediaPlayer!!.duration.toLong())
+            playerActivity?.binding?.seekBarStartPA?.text = formatDuration(mediaPlayer!!.currentPosition.toLong())
+            playerActivity?.binding?.seekBarEndPA?.text = formatDuration(mediaPlayer!!.duration.toLong())
             playerActivity?.binding?.seekBarPA?.progress = 0
             playerActivity?.binding?.seekBarPA?.max = mediaPlayer!!.duration
             playerActivity?.nowPlayingId=musicListPA[songPosition].id

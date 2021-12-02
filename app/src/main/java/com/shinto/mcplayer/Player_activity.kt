@@ -177,7 +177,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         }
     }
 
-    fun setLayout() {
+     fun setLayout() {
         //It shows the information in player activity place
       Glide.with(this).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
         .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
@@ -185,14 +185,12 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         into(binding.songImgPA)
         // Text setting
         binding.songNamePA.text = musicService?.musicListPA!![musicService?.songPosition!!].title
-
         if (musicService!!.repeat) binding.repeatBtnPA.setColorFilter(
             ContextCompat.getColor(
                 this,
                 R.color.teal_200
             )
         )
-
         if (min15 || min30 || min60) binding.timerBtnPA.setColorFilter(
             ContextCompat.getColor(
                 this,
