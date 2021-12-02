@@ -2,6 +2,7 @@ package com.shinto.mcplayer
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -37,8 +38,10 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
         holder.root.setOnClickListener {
             val intent = Intent(context, Player_activity::class.java)
             intent.putExtra("index", position)
+            Log.d("pass1",position.toString())
             intent.putExtra("class", "MusicAdapter")
             ContextCompat.startActivity(context, intent, null)
+           // (holder.root.context as MainActivity)
         }
     }
 

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#0E328E"
+    tools:context=".NowPlaying">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+      >
+
+        <!-- TODO: Update blank fragment layout -->
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/songImgNp"
+            android:layout_width="70dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="5dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/timer"
+            app:layout_constraintEnd_toStartOf="@+id/songNameMp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/curved" />
+
+        <ImageView
+            android:id="@+id/playPauseBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/play"
+            app:layout_constraintEnd_toStartOf="@+id/nextBtnNp"
+            app:layout_constraintStart_toEndOf="@+id/songNameMp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/nextBtnNp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="18dp"
+            android:src="@drawable/next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/playPauseBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/songNameMp"
+            android:layout_width="167dp"
+            android:layout_height="43dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="4dp"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:text="song name"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            app:layout_constraintEnd_toStartOf="@+id/playPauseBtn"
+            app:layout_constraintStart_toEndOf="@+id/songImgNp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

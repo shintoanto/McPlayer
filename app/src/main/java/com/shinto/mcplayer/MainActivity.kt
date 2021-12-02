@@ -1,34 +1,46 @@
 package com.shinto.mcplayer
 
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shinto.mcplayer.databinding.ActivityMainBinding
 import java.io.File
+class MainActivity : AppCompatActivity(),ServiceConnection{
 
-class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var musicAdapter: MusicAdapter
+    lateinit var MusicListMA: ArrayList<Music>
 
-    companion object {
-        lateinit var MusicListMA: ArrayList<Music>
-    }
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // service started
+        val int = Intent(this,MusicService::class.java)
+        startForegroundService(Intent(this,MusicService::class.java))
+       // startService(Intent(this,MusicService::class.java))
+        bindService(int,this, Context.BIND_AUTO_CREATE)
 
         toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
         binding.root.addDrawerListener(toggle)
@@ -80,8 +92,9 @@ class MainActivity : AppCompatActivity() {
 
         // pass the activity to music adapter
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
+        Log.d("music",musicAdapter.toString())
         binding.musicRv.adapter = musicAdapter
-        // binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
+        binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
     }
 
     private fun requestRuntimePermission(): Boolean {
@@ -125,7 +138,6 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-
     private fun getAllAudio(): ArrayList<Music> {
         val tempList = ArrayList<Music>()
         // selection is using athe type data ane anne ariyan
@@ -168,6 +180,7 @@ class MainActivity : AppCompatActivity() {
                     val albumIdC = cursor.getString(7)
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
+                    Log.i("uri1",uri.toString())
 
                     val music = Music(
                         id = idC,
@@ -186,5 +199,23 @@ class MainActivity : AppCompatActivity() {
         }
         return tempList
     }
+
+    override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+        val binder = p1 as MusicService.MyBinder
+        musicService = binder.currentService()
+        musicService!!.musicListPA = getAllAudio()
+        Log.i("musicsa", musicService?.musicListPA.toString())
+    }
+
+    override fun onServiceDisconnected(p0: ComponentName?) {
+        musicService = null
+    }
+
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        if (playerActivity.isPlaying && musicService != null){
+//            exitApplication()
+//        }
+//    }
 
 }

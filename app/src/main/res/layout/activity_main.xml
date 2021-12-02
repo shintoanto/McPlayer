@@ -8,45 +8,58 @@
     tools:openDrawer="start"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/icons"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:id="@+id/shufflebtn"
-                android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/icons"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="shuffle"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:drawableTop="@drawable/shuffle"/>
-            <Button
-                android:id="@+id/favouriteBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="shuffle"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:drawableTop="@drawable/favourites"/>
-            <Button
-                android:id="@+id/btnTotalSongs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TotalSongs"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:drawableTop="@drawable/playlist"/>
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/shufflebtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="shuffle"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:drawableTop="@drawable/shuffle"/>
+                <Button
+                    android:id="@+id/favouriteBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="shuffle"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:drawableTop="@drawable/favourites"/>
+                <Button
+                    android:id="@+id/btnTotalSongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TotalSongs"
+                    android:textColor="#46AC3B"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:drawableTop="@drawable/playlist"/>
+            </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/musicRv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </LinearLayout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/musicRv"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nowPlaying"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:name="com.shinto.mcplayer.NowPlaying"
+            tools:layout="@layout/fragment_now_playing"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
