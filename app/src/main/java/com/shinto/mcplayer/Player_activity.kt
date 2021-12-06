@@ -47,6 +47,9 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 //
 //        var nowPlayingId: String = " "
 
+    companion object{
+       val MUSIC_NAME = "music name"
+    }
 
     //var songPosition: Int = 0
     //var musicService: MusicService? = null
@@ -57,6 +60,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
     var min60: Boolean = false
     lateinit var runnable:Runnable
     var nowPlayingId: String = " "
+    private lateinit var musicDao:MusicDao
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -213,6 +217,11 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 //        isPlaying = false
 //    }
 
+//    private fun addToFavourates(){
+//      val SongDao = musicDao.addMusic(musicService?.musicListPA!![musicService?.songPosition!!])
+//        Log.d("dao",SongDao.toString())
+//    }
+
     private fun createMediaPlayer() {
         try {
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
@@ -232,7 +241,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 //                Log.i("Checking","working")
 //            }
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
-            nowPlayingId = musicService!!.musicListPA[musicService?.songPosition!!].id
+            nowPlayingId = musicService!!.musicListPA[musicService?.songPosition!!].id.toString()
             setLayout()
         } catch (e: Exception) {
             return

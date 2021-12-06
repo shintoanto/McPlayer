@@ -36,16 +36,17 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
             .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).into(holder.image)
 
         holder.root.setOnClickListener {
+            val music = musicList[position]
             val intent = Intent(context, Player_activity::class.java)
             intent.putExtra("index", position)
             Log.d("pass1",position.toString())
             intent.putExtra("class", "MusicAdapter")
+            intent.putExtra(Player_activity.MUSIC_NAME,music)
             ContextCompat.startActivity(context, intent, null)
            // (holder.root.context as MainActivity)
         }
     }
 
-    override fun getItemCount(): Int {
-        return musicList.size
-    }
+    override fun getItemCount(): Int = musicList.size
+
 }

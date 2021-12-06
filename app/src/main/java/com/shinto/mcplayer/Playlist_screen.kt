@@ -13,4 +13,5 @@ class Playlist_screen : AppCompatActivity() {
         binding= ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
+
 }

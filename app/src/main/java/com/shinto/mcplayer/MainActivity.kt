@@ -168,16 +168,14 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
             if (cursor.moveToFirst())
                 do {
                     val idC = cursor.getString(0)
-                    val titleC =
-                        cursor.getString(1)
-                    val albumC =
-                        cursor.getString(2)
-                    val artistC =
-                        cursor.getString(3)
-                    val durationC =
-                        cursor.getLong(4)
+                    val titleC = cursor.getString(1)
+                    val albumC = cursor.getString(2)
+                    val artistC = cursor.getString(3)
+                    val durationC = cursor.getLong(4)
                     val pathC = cursor.getString(6)
                     val albumIdC = cursor.getString(7)
+//                    val timestampId = System.currentTimeMillis()
+//                    val timestamp = timestampId.toString()+idC.toString()
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
                     Log.i("uri1",uri.toString())

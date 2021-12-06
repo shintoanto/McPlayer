@@ -5,10 +5,8 @@ import android.app.Service
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
@@ -63,13 +61,13 @@ class MusicService : Service(),ServiceConnection {
         val exitPendingInt=PendingIntent.getBroadcast(baseContext,0,exitIntent,PendingIntent.FLAG_UPDATE_CURRENT)
 
 
-if(!musicListPA.isEmpty()){
+    if(!musicListPA.isEmpty()){
     var img = BitmapFactory.decodeResource(resources, R.drawable.mj)
     val imgArt = getImgArt(musicListPA[songPosition].path)
      if (imgArt != null) {
          img = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
      }
-         val notification = NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
+        val notification = NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
              .setContentTitle(musicListPA[songPosition].title)
              .setContentText(musicListPA[songPosition].artist)
              .setSmallIcon(R.drawable.favourites)
@@ -140,10 +138,6 @@ if(!musicListPA.isEmpty()){
             }
 
     }
-
-
-
-
     //playmusic:ArrayList<Music>,intex:Int
 
     fun playMusic() {
