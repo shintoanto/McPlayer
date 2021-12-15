@@ -11,6 +11,7 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.provider.Settings
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -18,6 +19,9 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shinto.mcplayer.databinding.ActivityPlayerBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MusicService : Service(),ServiceConnection {
 
@@ -28,10 +32,15 @@ class MusicService : Service(),ServiceConnection {
     var MusicListMA = arrayListOf<Music>()
     private lateinit var runnable: Runnable
     private lateinit var mediaSession: MediaSessionCompat
+    lateinit var favPlaylist : List<Music>
+    // var favMusic:List<Music> = emptyList()
+    var favMusic:List<Music> = mutableListOf()
     var playerActivity:Player_activity?=null
    // lateinit var binding: ActivityPlayerBinding
     // comes from the player activity
    var musicListPA= arrayListOf<Music>()
+    var playlist=mutableListOf<String>()
+    var playlistMusic = mutableListOf<String>()
 
     // Media button on API 8+
     override fun onBind(p0: Intent?): IBinder {
@@ -63,7 +72,7 @@ class MusicService : Service(),ServiceConnection {
 
     if(!musicListPA.isEmpty()){
     var img = BitmapFactory.decodeResource(resources, R.drawable.mj)
-    val imgArt = getImgArt(musicListPA[songPosition].path)
+    val imgArt = musicListPA[songPosition].path?.let { getImgArt(it) }
      if (imgArt != null) {
          img = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
      }
@@ -86,7 +95,33 @@ class MusicService : Service(),ServiceConnection {
              .build()
          startForeground(13, notification)
 }
+    }
 
+    fun readPlayListNameFromDB(){
+        val SongDao = MusicDatabase.getDatabase(application).songDao()
+        GlobalScope.launch(Dispatchers.IO) {
+           // val songDao = SongDao.readDistinctNames() as MutableList<String>
+            playlist = SongDao.readDistinctNames() as MutableList<String>
+            if(playlist.contains("favourites")){
+                playlist.remove("favourites")
+            }
+        }
+    }
+
+    fun readFavSongs(favourite:String){
+        GlobalScope.launch(Dispatchers.IO) {
+            val SongDao = MusicDatabase.getDatabase(application).songDao()
+            favPlaylist = SongDao.readAllData(favourite)
+            favMusic = favPlaylist
+        }
+    }
+
+    fun readPlaylistSongs(name:String){
+        GlobalScope.launch(Dispatchers.IO) {
+            val SongDao = MusicDatabase.getDatabase(application).songDao()
+            playlistMusic = SongDao.readAllSongsFromPlaylist(name)
+            playlist = playlistMusic
+        }
     }
 
     fun createMediaPlayer() {
@@ -100,7 +135,7 @@ class MusicService : Service(),ServiceConnection {
             playerActivity?.binding?.seekBarEndPA?.text = formatDuration(mediaPlayer!!.duration.toLong())
             playerActivity?.binding?.seekBarPA?.progress = 0
             playerActivity?.binding?.seekBarPA?.max = mediaPlayer!!.duration
-            playerActivity?.nowPlayingId=musicListPA[songPosition].id
+            playerActivity?.nowPlayingId=musicListPA[songPosition].id.toString()
         } catch (e: Exception) {
             return
         }
@@ -124,7 +159,6 @@ class MusicService : Service(),ServiceConnection {
     }
 
     fun setSongPosition(increment: Boolean) {
-
             if (increment) {
                 if (musicService?.musicListPA!!.size - 1 == songPosition)
                     songPosition = 0
@@ -136,7 +170,6 @@ class MusicService : Service(),ServiceConnection {
                 else
                     --songPosition
             }
-
     }
     //playmusic:ArrayList<Music>,intex:Int
 
@@ -154,7 +187,6 @@ fun pauseMusic() {
     musicService!!.mediaPlayer!!.pause()
     playerActivity?.isPlaying = false
 }
-
 
 //    fun pauseMusic() {
 //        Log.d("play", "pausemusic")

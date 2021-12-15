@@ -68,7 +68,6 @@ class NowPlaying : Fragment(),MediaPlayer.OnCompletionListener,ServiceConnection
             musicService?.playMusic()
         }
 
-
         binding.prevtBtnNp.setOnClickListener {
             musicService!!.setSongPosition(increment = false)
             musicService!!.createMediaPlayer()

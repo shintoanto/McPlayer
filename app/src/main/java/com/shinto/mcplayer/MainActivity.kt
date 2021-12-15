@@ -36,6 +36,11 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.favPageBtn.setOnClickListener {
+            val intent = Intent(applicationContext, Favourite::class.java)
+            startActivity(intent)
+        }
+
         // service started
         val int = Intent(this,MusicService::class.java)
         startForegroundService(Intent(this,MusicService::class.java))
@@ -167,7 +172,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
                     // cursor to the first result (when the set is not empty).
             if (cursor.moveToFirst())
                 do {
-                    val idC = cursor.getString(0)
+                    val idC = cursor.getInt(0)
                     val titleC = cursor.getString(1)
                     val albumC = cursor.getString(2)
                     val artistC = cursor.getString(3)
@@ -181,13 +186,15 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
                     Log.i("uri1",uri.toString())
 
                     val music = Music(
+                        timestamp= System.currentTimeMillis().toString(),
                         id = idC,
                         title = titleC,
                         album = albumC,
                         artist = artistC,
                         path = pathC,
                         duration = durationC,
-                        artUri = artUriC
+                        artUri = artUriC,
+                        playListName = ""
                     )
                     val file = File(music.path)
                     if (file.exists())

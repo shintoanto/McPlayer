@@ -11,10 +11,10 @@
         android:layout_height="70dp"
         app:shapeAppearanceOverlay="@style/curved"
         android:src="@drawable/favourite"
-        android:id="@+id/songImgFav"/>
+        android:id="@+id/songImgPlay"/>
 
     <TextView
-        android:id="@+id/songNameFav"
+        android:id="@+id/songNamePlay"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:maxLines="2"

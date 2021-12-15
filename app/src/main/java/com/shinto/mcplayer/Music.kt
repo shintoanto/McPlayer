@@ -1,6 +1,5 @@
 package com.shinto.mcplayer
 
-
 import android.media.MediaMetadataRetriever
 import android.os.Parcel
 import android.os.Parcelable
@@ -11,50 +10,51 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.util.concurrent.TimeUnit
 
-//@Parcelize
+@Parcelize
 @Entity(tableName = "Musictable")
 data class Music(
-   // @PrimaryKey var timestamp: String,
-    val id: String?,
-    val title: String?,
-    val playListName:String?,
-    val album: String?,
-    val artist: String?,
+    @PrimaryKey var timestamp: String,
+    val id: Int,
+    val title: String,
+    var playListName:String,
+    val album: String,
+    val artist: String,
     val duration: Long = 0,
-    val path: String?,
-    val artUri: String?
-) : Parcelable {
-    constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readLong(),
-        parcel.readString(),
-        parcel.readString()
-    ) {
-    }
+    val path: String,
+    val artUri: String
+) : Parcelable
+//    : Parcelable {
+//    constructor(parcel: Parcel) : this(
+//        parcel.readInt(),
+//        parcel.readString(),
+//        parcel.readString(),
+//        parcel.readString(),
+//        parcel.readString(),
+//        parcel.readLong(),
+//        parcel.readString(),
+//        parcel.readString()
+//    ) {
+//    }
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeString(id)
-        parcel.writeString(title)
-        parcel.writeString(album)
-        parcel.writeString(artist)
-        parcel.writeLong(duration)
-        parcel.writeString(path)
-        parcel.writeString(artUri)
-    }
+//    override fun writeToParcel(parcel: Parcel, flags: Int) {
+//        parcel.writeInt(id!!)
+//        parcel.writeString(title)
+//        parcel.writeString(album)
+//        parcel.writeString(artist)
+//        parcel.writeLong(duration)
+//        parcel.writeString(path)
+//        parcel.writeString(artUri)
+//    }
 
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<Music> {
-        override fun createFromParcel(parcel: Parcel): Music = Music(parcel)
-
-        override fun newArray(size: Int): Array<Music?> = arrayOfNulls(size)
-
-    }
-}
+//    override fun describeContents(): Int = 0
+//
+//    companion object CREATOR : Parcelable.Creator<Music> {
+//        override fun createFromParcel(parcel: Parcel): Music = Music(parcel)
+//
+//        override fun newArray(size: Int): Array<Music?> = arrayOfNulls(size)
+//
+//    }
+//}
 //    :Parcelable
 
 var playerActivity: Player_activity? = null

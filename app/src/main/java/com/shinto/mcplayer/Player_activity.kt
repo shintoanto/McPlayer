@@ -22,6 +22,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shinto.mcplayer.databinding.ActivityPlayerBinding
+import kotlinx.coroutines.*
+import java.lang.Runnable
 
 class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
 
@@ -47,8 +49,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 //
 //        var nowPlayingId: String = " "
 
-    companion object{
-       val MUSIC_NAME = "music name"
+    companion object {
+        val MUSIC_NAME = "music name"
     }
 
     //var songPosition: Int = 0
@@ -58,15 +60,16 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
     var min15: Boolean = false
     var min30: Boolean = false
     var min60: Boolean = false
-    lateinit var runnable:Runnable
+    lateinit var runnable: Runnable
     var nowPlayingId: String = " "
-    private lateinit var musicDao:MusicDao
-
+    private lateinit var musicDao: MusicDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        musicDao = MusicDatabase.getDatabase(application).songDao()
 
         // starting service
         initializeLayout()
@@ -97,7 +100,6 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             val sharIntent = Intent()
             sharIntent.action = Intent.ACTION_SEND
             sharIntent.type = "audio/*"
-            Log.d("service___", musicService?.musicListPA?.size.toString())
             sharIntent.putExtra(
                 Intent.EXTRA_STREAM,
                 Uri.parse(musicService?.musicListPA!![musicService?.songPosition!!].path)
@@ -106,7 +108,6 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         }
 
         binding.playPauseButton.setOnClickListener {
-            Log.d("play", "playPauseButtonSetONclickListner")
             if (musicService?.mediaPlayer?.isPlaying!!) musicService?.pauseMusic()
             else musicService?.playMusic()
         }
@@ -119,18 +120,25 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             override fun onStartTrackingTouch(p0: SeekBar?) = Unit
 
             override fun onStopTrackingTouch(p0: SeekBar?) = Unit
+
         })
 
         binding.previewsBtnPA.setOnClickListener {
-            musicService!!.prevNextBtn(increment = false,callback) }
+            musicService!!.prevNextBtn(increment = false, callback)
+        }
 
         binding.nextBtnPA.setOnClickListener {
-            Log.d("set","next button")
-            musicService!!.prevNextBtn(increment = true,callback) }
+            musicService!!.prevNextBtn(increment = true, callback)
+        }
+
+        binding.idFavBtn.setOnClickListener {
+            checkFavSongAddOrRemove()
+        }
+        binding.playlistBtn.setOnClickListener {
+            checkPlaylistSongAddOrRemove()
+        }
 
         binding.repeatBtnPA.setOnClickListener {
-
-            Log.d("timerbtn","timeerbrtton")
             if (!musicService?.repeat!!) {
                 musicService!!.repeat = true
                 binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.teal_200))
@@ -142,7 +150,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             }
         }
     }
-    val callback:() ->Unit= {
+
+    val callback: () -> Unit = {
         setLayout()
     }
 
@@ -153,24 +162,27 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             "NowPlaying" -> {
                 setLayout()
                 binding.seekBarStartPA.text = formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-                binding.seekBarEndPA.text = formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                binding.seekBarEndPA.text =formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
                 binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
                 binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
                 if (isPlaying) binding.playPauseButton.setIconResource(R.drawable.pause)
                 else binding.playPauseButton.setIconResource(R.drawable.play)
             }
-
             "MusicAdapter" -> {
                 val intent = Intent(this, MusicService::class.java)
                 this.bindService(intent, this, BIND_AUTO_CREATE)
                 this.startService(intent)
-                Log.d("play","intent")
-               // musicService?.musicListPA = ArrayList()
+                Log.d("play", "intent")
+                // musicService?.musicListPA = ArrayList()
                 musicService?.musicListPA?.addAll(musicService!!.MusicListMA)
 //                Log.d("musicLoad",musicService!!.musicListPA[musicService!!.songPosition].title)
-             //   setLayout()
+                //   setLayout()
             }
-
+//            "Favourites" ->{
+//                val intent = Intent(this,MusicService::class.java)
+//                this.bindService(intent,this, BIND_AUTO_CREATE)
+//                this.startActivity(intent)
+//            }
 //            "MainActivity" -> {
 //                musicListPA = ArrayList()
 //                musicListPA.addAll(musicService!!.MusicListMA)
@@ -181,12 +193,12 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         }
     }
 
-     fun setLayout() {
+    fun setLayout() {
         //It shows the information in player activity place
-      Glide.with(this).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
-        .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
-            // Image setting
-        into(binding.songImgPA)
+        Glide.with(this).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
+            .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
+                // Image setting
+            into(binding.songImgPA)
         // Text setting
         binding.songNamePA.text = musicService?.musicListPA!![musicService?.songPosition!!].title
         if (musicService!!.repeat) binding.repeatBtnPA.setColorFilter(
@@ -233,10 +245,12 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             isPlaying = true
             binding.playPauseButton.setIconResource(R.drawable.pause)
             musicService!!.showNotification(R.drawable.pause)
-            binding.seekBarStartPA.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
-            binding.seekBarEndPA.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
+            binding.seekBarStartPA.text =
+                formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text =
+                formatDuration(musicService?.mediaPlayer!!.duration.toLong())
             binding.seekBarPA.progress = 0
-           binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
+            binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
 //            musicService!!.mediaPlayer!!.setOnCompletionListener {
 //                Log.i("Checking","working")
 //            }
@@ -254,6 +268,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         seekBarSetup()
         setLayout()
         createMediaPlayer()
+        //  checkFavSongAddOrRemove()
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
@@ -262,9 +277,11 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 
 
     private fun seekBarSetup() {
-      runnable = Runnable {
-            binding.seekBarStartPA.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
-            binding.seekBarEndPA.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
+        runnable = Runnable {
+            binding.seekBarStartPA.text =
+                formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text =
+                formatDuration(musicService?.mediaPlayer!!.duration.toLong())
             binding.seekBarPA.progress = musicService?.mediaPlayer!!.currentPosition
             binding.seekBarPA.max = musicService?.mediaPlayer!!.duration
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
@@ -288,7 +305,6 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 //    }
 
     override fun onCompletion(p0: MediaPlayer?) {
-        Log.d("onCompletion", "msgsmsg")
         musicService!!.setSongPosition(increment = true)
         createMediaPlayer()
         callback()
@@ -334,4 +350,90 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             dialog.dismiss()
         }
     }
+
+    private fun addToFavourites() {
+        binding.idFavBtn.setImageResource(R.drawable.favourite)
+        System.currentTimeMillis()
+        GlobalScope.launch(Dispatchers.IO) {
+            musicService?.musicListPA!![musicService!!.songPosition].playListName = "favourites"
+            musicDao.addMusic(musicService?.musicListPA!![musicService!!.songPosition])
+            withContext(Dispatchers.Main) {
+                musicService?.readFavSongs("favourites")
+            }
+        }
+    }
+
+    private fun addingToPlaylist(){
+        System.currentTimeMillis()
+        GlobalScope.launch(Dispatchers.IO) {
+            musicService?.musicListPA!![musicService!!.songPosition].playListName = "name"
+            musicDao.addMusic(musicService?.musicListPA!![musicService!!.songPosition])
+            withContext(Dispatchers.Main){
+                musicService?.readPlaylistSongs("name")
+            }
+        }
+    }
+
+    private fun removeFavourites() {
+        binding.idFavBtn.setImageResource(R.drawable.heartholow)
+        CoroutineScope(Dispatchers.IO).launch {
+            musicDao.removeMusic(musicService?.musicListPA!![musicService!!.songPosition])
+            musicService?.favMusic = emptyList()
+            musicService?.readFavSongs("favourites")
+        }
+    }
+
+    private fun removePlaylists() {
+       // binding.idFavBtn.setImageResource(R.drawable.heartholow)
+        CoroutineScope(Dispatchers.IO).launch {
+            musicDao.removeMusic(musicService?.musicListPA!![musicService!!.songPosition])
+            musicService?.playlist = mutableListOf()
+            musicService?.readPlaylistSongs("name")
+        }
+    }
+
+    private fun addingRemoveFavourite(): Boolean {
+        if (musicService?.favMusic!!.isNotEmpty()) {
+            for (music in musicService?.favMusic!!) {
+                if (music.id == musicService!!.musicListPA[musicService!!.songPosition].id) {
+                    binding.idFavBtn.setImageResource(R.drawable.favourite)
+                }
+                return true
+            }
+        }
+        binding.idFavBtn.setImageResource(R.drawable.heartholow)
+        return false
+    }
+
+    private fun addingOrRemovePlaylist():Boolean{
+        if (musicService?.playlist!!.isNotEmpty()){
+            for (playlis in musicService?.playlist!!){
+                if (playlis.id == musicService!!.musicListPA[musicService!!.songPosition].id){
+                    binding.playlistBtn.setImageResource(R.drawable.close)
+                }
+                return true
+            }
+        }
+        binding.playlistBtn.setImageResource(R.drawable.favourite)
+        return false
+    }
+
+    private fun checkFavSongAddOrRemove() {
+        val value = addingRemoveFavourite()
+        if (value) {
+            removeFavourites()
+        } else {
+            addToFavourites()
+        }
+    }
+
+    private fun checkPlaylistSongAddOrRemove() {
+        val value = addingOrRemovePlaylist()
+        if (value) {
+            removePlaylists()
+        } else {
+            addingToPlaylist()
+        }
+    }
+
 }

@@ -1,12 +1,15 @@
 package com.shinto.mcplayer
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.shinto.mcplayer.databinding.FavCardBinding
 
-class FavouriteAdapter(private val context: Context, private var musicList: ArrayList<String>) :
+class FavouriteAdapter(private val context: Context, private var musicList: ArrayList<Music>) :
     RecyclerView.Adapter<FavouriteAdapter.ViewHolder>() {
 
     class ViewHolder(binding: FavCardBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -19,10 +22,14 @@ class FavouriteAdapter(private val context: Context, private var musicList: Arra
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.text = musicList[position]
+        Glide.with(context).load(musicList[position].artUri)
+            .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).into(holder.image)
+
+        holder.title.text = musicList[position].title
     }
 
     override fun getItemCount(): Int {
         return musicList.size
     }
+
 }

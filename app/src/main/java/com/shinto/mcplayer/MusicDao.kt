@@ -16,4 +16,11 @@ interface MusicDao {
 
     @Query("SELECT * FROM `Musictable` WHERE playListName LIKE :favorite")
     fun readAllData(favorite: String): List<Music>
+
+    @Query("SELECT  DISTINCT playListName  FROM `Musictable`")
+    fun readDistinctNames(): List<String>
+
+    @Query("SELECT * FROM `Musictable` WHERE playListName LIKE :name")
+    fun readAllSongsFromPlaylist(name: String): List<String>
+
 }
