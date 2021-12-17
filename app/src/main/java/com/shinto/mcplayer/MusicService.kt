@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.BitmapFactory
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Handler
@@ -19,12 +20,14 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.shinto.mcplayer.databinding.ActivityPlayerBinding
+import com.shinto.mcplayer.databinding.FragmentNowPlayingBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MusicService : Service(),ServiceConnection {
-
+class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChangeListener {
+    var nowPlaying: NowPlaying? = null
+    lateinit var audioManager: AudioManager
     private var myBinder = MyBinder()
     var repeat: Boolean = false
     var songPosition = -1
@@ -36,6 +39,7 @@ class MusicService : Service(),ServiceConnection {
     // var favMusic:List<Music> = emptyList()
     var favMusic:List<Music> = mutableListOf()
     var playerActivity:Player_activity?=null
+    var binding:FragmentNowPlayingBinding?=null
    // lateinit var binding: ActivityPlayerBinding
     // comes from the player activity
    var musicListPA= arrayListOf<Music>()
@@ -119,7 +123,8 @@ class MusicService : Service(),ServiceConnection {
     fun readPlaylistSongs(name:String){
         GlobalScope.launch(Dispatchers.IO) {
             val SongDao = MusicDatabase.getDatabase(application).songDao()
-            playlistMusic = SongDao.readAllSongsFromPlaylist(name)
+            playlistMusic = SongDao.readAllSongsFromPlaylist(name) as MutableList<String>
+            //Todo
             playlist = playlistMusic
         }
     }
@@ -205,5 +210,21 @@ fun pauseMusic() {
 
     override fun onServiceDisconnected(p0: ComponentName?) {
         TODO("Not yet implemented")
+    }
+
+    override fun onAudioFocusChange(p0: Int) {
+        if (p0 <= 0){
+            playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.play)
+//            nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.play)
+            musicService!!.showNotification(R.drawable.play)
+            musicService!!.mediaPlayer!!.pause()
+            playerActivity?.isPlaying = false
+        }else{
+            playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
+//            nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.pause)
+            playerActivity?.isPlaying = true
+            mediaPlayer!!.start()
+            showNotification(R.drawable.pause)
+        }
     }
 }

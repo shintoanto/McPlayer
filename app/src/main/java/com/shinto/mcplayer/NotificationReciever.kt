@@ -11,6 +11,7 @@ import kotlinx.coroutines.withContext
 class NotificationReciever : BroadcastReceiver() {
 
     var playerActivity: Player_activity? = null
+    var nowPlaying: NowPlaying? = null
 
     override fun onReceive(context: Context?, intent: Intent?) {
         when (intent?.action) {

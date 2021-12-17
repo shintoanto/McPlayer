@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.shinto.mcplayer.databinding.FragmentNowPlayingBinding
 import kotlinx.parcelize.Parcelize
 import java.util.concurrent.TimeUnit
 
@@ -59,7 +60,8 @@ data class Music(
 
 var playerActivity: Player_activity? = null
 var musicService: MusicService? = null
-var nowPlaying: NowPlaying? = null
+
+
 
 fun formatDuration(duration: Long): String {
     val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
@@ -87,6 +89,7 @@ fun formatDuration(duration: Long): String {
 //}
 
 fun exitApplication() {
+    musicService!!.audioManager.abandonAudioFocus(musicService)
     musicService?.stopForeground(true)
     musicService?.mediaPlayer!!.release()
     //  musicService = null

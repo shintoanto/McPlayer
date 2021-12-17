@@ -4,7 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -20,6 +24,7 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
         val duration = binding.songDuration
         val image = binding.imageMV
         val root = binding.root
+        val threeDot = binding.popUp
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
@@ -30,6 +35,9 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
+        holder.threeDot.setOnClickListener {
+            showPop(it)
+        }
 
         // image fetching and setting in music
         Glide.with(context).load(musicList[position].artUri)
@@ -48,5 +56,26 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
     }
 
     override fun getItemCount(): Int = musicList.size
+
+ private fun showPop(view:View){
+     val popup = PopupMenu(context,view)
+     popup.inflate(R.menu.popup_menu)
+
+     popup.setOnMenuItemClickListener(PopupMenu.OnMenuItemClickListener { item:MenuItem ->
+         when(item.itemId){
+             R.id.popup_add_to_playlist->{
+                 Toast.makeText(context,item.title,Toast.LENGTH_LONG).show()
+             }
+             R.id.popup_delete ->{
+                 Toast.makeText(context,item.title,Toast.LENGTH_LONG).show()
+             }
+
+         }
+         true
+     })
+     popup.show()
+ }
+
+
 
 }

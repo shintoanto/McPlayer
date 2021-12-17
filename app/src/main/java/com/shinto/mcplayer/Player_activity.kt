@@ -1,9 +1,11 @@
 package com.shinto.mcplayer
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.Color
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +19,8 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
+import androidx.media.AudioManagerCompat.requestAudioFocus
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -134,9 +138,9 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         binding.idFavBtn.setOnClickListener {
             checkFavSongAddOrRemove()
         }
-        binding.playlistBtn.setOnClickListener {
-            checkPlaylistSongAddOrRemove()
-        }
+//        binding.playlistBtn.setOnClickListener {
+//            checkPlaylistSongAddOrRemove()
+//        }
 
         binding.repeatBtnPA.setOnClickListener {
             if (!musicService?.repeat!!) {
@@ -269,6 +273,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         setLayout()
         createMediaPlayer()
         //  checkFavSongAddOrRemove()
+        musicService!!.audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        musicService!!.audioManager.requestAudioFocus(musicService,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
@@ -405,18 +411,18 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         return false
     }
 
-    private fun addingOrRemovePlaylist():Boolean{
-        if (musicService?.playlist!!.isNotEmpty()){
-            for (playlis in musicService?.playlist!!){
-                if (playlis.id == musicService!!.musicListPA[musicService!!.songPosition].id){
-                    binding.playlistBtn.setImageResource(R.drawable.close)
-                }
-                return true
-            }
-        }
-        binding.playlistBtn.setImageResource(R.drawable.favourite)
-        return false
-    }
+//    private fun addingOrRemovePlaylist():Boolean{
+//        if (musicService?.playlist!!.isNotEmpty()){
+//            for (playlis in musicService?.playlist!!){
+//                if (playlis.id == musicService!!.musicListPA[musicService!!.songPosition].id){
+//                    binding.playlistBtn.setImageResource(R.drawable.close)
+//                }
+//                return true
+//            }
+//        }
+//        binding.playlistBtn.setImageResource(R.drawable.favourite)
+//        return false
+//    }
 
     private fun checkFavSongAddOrRemove() {
         val value = addingRemoveFavourite()
@@ -427,13 +433,13 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         }
     }
 
-    private fun checkPlaylistSongAddOrRemove() {
-        val value = addingOrRemovePlaylist()
-        if (value) {
-            removePlaylists()
-        } else {
-            addingToPlaylist()
-        }
-    }
+//    private fun checkPlaylistSongAddOrRemove() {
+//        val value = addingOrRemovePlaylist()
+//        if (value) {
+//            removePlaylists()
+//        } else {
+//            addingToPlaylist()
+//        }
+//    }
 
 }
