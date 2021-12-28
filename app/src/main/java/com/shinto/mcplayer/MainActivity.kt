@@ -1,6 +1,7 @@
 package com.shinto.mcplayer
 
 
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Message
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
@@ -22,13 +24,16 @@ import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shinto.mcplayer.databinding.ActivityMainBinding
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
+
 class MainActivity : AppCompatActivity(),ServiceConnection{
 
-
     private lateinit var binding: ActivityMainBinding
-    private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var musicAdapter: MusicAdapter
     lateinit var MusicListMA: ArrayList<Music>
+    private val playLists = Playlist_screen()
+    private val favourite= Favourite()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +42,12 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         setContentView(binding.root)
 
         binding.favPageBtn.setOnClickListener {
-            val intent = Intent(applicationContext, Favourite::class.java)
-            startActivity(intent)
+            navigate(applicationContext,favourite)
         }
+        binding.btnPlaylist.setOnClickListener {
+            navigate(applicationContext,playLists)
+        }
+
 
         // service started
         val int = Intent(this,MusicService::class.java)
@@ -47,10 +55,10 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
        // startService(Intent(this,MusicService::class.java))
         bindService(int,this, Context.BIND_AUTO_CREATE)
 
-        toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
-        binding.root.addDrawerListener(toggle)
-        toggle.syncState()
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
+//        binding.root.addDrawerListener(toggle)
+//        toggle.syncState()
+//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         if (requestRuntimePermission())
             initializeLayout()
@@ -85,6 +93,11 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         }
     }
 
+    fun navigate(context: Context,Class:Activity){
+        val intent = Intent(context,Class::class.java)
+        startActivity(intent)
+    }
+
     private fun initializeLayout() {
         MusicListMA = getAllAudio()
         val musicList = ArrayList<String>()
@@ -99,7 +112,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
         Log.d("music",musicAdapter.toString())
         binding.musicRv.adapter = musicAdapter
-        binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
+      //  binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
     }
 
     private fun requestRuntimePermission(): Boolean {
@@ -118,6 +131,10 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         return true
     }
 
+    fun toast(context:Context,message:String){
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -126,7 +143,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 13) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Result granted", Toast.LENGTH_LONG).show()
+              toast(baseContext,"Result granted")
                 initializeLayout()
             } else
                 ActivityCompat.requestPermissions(
@@ -137,11 +154,11 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (toggle.onOptionsItemSelected(item))
-            return true
-        return super.onOptionsItemSelected(item)
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        if (toggle.onOptionsItemSelected(item))
+//            return true
+//        return super.onOptionsItemSelected(item)
+//    }
 
     private fun getAllAudio(): ArrayList<Music> {
         val tempList = ArrayList<Music>()

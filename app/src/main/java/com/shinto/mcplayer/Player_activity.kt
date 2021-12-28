@@ -176,11 +176,16 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
                 val intent = Intent(this, MusicService::class.java)
                 this.bindService(intent, this, BIND_AUTO_CREATE)
                 this.startService(intent)
-                Log.d("play", "intent")
                 // musicService?.musicListPA = ArrayList()
                 musicService?.musicListPA?.addAll(musicService!!.MusicListMA)
 //                Log.d("musicLoad",musicService!!.musicListPA[musicService!!.songPosition].title)
                 //   setLayout()
+            }
+            "SongsInPlaylistAdapter"->{
+                val intent = Intent(this,MusicService::class.java)
+                this.bindService(intent,this, BIND_AUTO_CREATE)
+                this.startService(intent)
+                createMediaPlayer()
             }
 //            "Favourites" ->{
 //                val intent = Intent(this,MusicService::class.java)
@@ -198,12 +203,9 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
     }
 
     fun setLayout() {
-        //It shows the information in player activity place
         Glide.with(this).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
             .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
-                // Image setting
             into(binding.songImgPA)
-        // Text setting
         binding.songNamePA.text = musicService?.musicListPA!![musicService?.songPosition!!].title
         if (musicService!!.repeat) binding.repeatBtnPA.setColorFilter(
             ContextCompat.getColor(
@@ -284,10 +286,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 
     private fun seekBarSetup() {
         runnable = Runnable {
-            binding.seekBarStartPA.text =
-                formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
-            binding.seekBarEndPA.text =
-                formatDuration(musicService?.mediaPlayer!!.duration.toLong())
+            binding.seekBarStartPA.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
             binding.seekBarPA.progress = musicService?.mediaPlayer!!.currentPosition
             binding.seekBarPA.max = musicService?.mediaPlayer!!.duration
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)

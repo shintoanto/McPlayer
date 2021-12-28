@@ -60,7 +60,7 @@ data class Music(
 
 var playerActivity: Player_activity? = null
 var musicService: MusicService? = null
-
+var playlistM = mutableListOf<String>()
 
 
 fun formatDuration(duration: Long): String {

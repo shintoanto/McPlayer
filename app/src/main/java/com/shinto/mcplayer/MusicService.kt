@@ -24,6 +24,7 @@ import com.shinto.mcplayer.databinding.FragmentNowPlayingBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChangeListener {
     var nowPlaying: NowPlaying? = null
@@ -36,15 +37,13 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     private lateinit var runnable: Runnable
     private lateinit var mediaSession: MediaSessionCompat
     lateinit var favPlaylist : List<Music>
-    // var favMusic:List<Music> = emptyList()
     var favMusic:List<Music> = mutableListOf()
     var playerActivity:Player_activity?=null
     var binding:FragmentNowPlayingBinding?=null
-   // lateinit var binding: ActivityPlayerBinding
-    // comes from the player activity
    var musicListPA= arrayListOf<Music>()
     var playlist=mutableListOf<String>()
-    var playlistMusic = mutableListOf<String>()
+     lateinit var playlistMusic: List<Music>
+     lateinit var songsInsidePlaylist:List<Music>
 
     // Media button on API 8+
     override fun onBind(p0: Intent?): IBinder {
@@ -75,15 +74,15 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
 
 
     if(!musicListPA.isEmpty()){
-    var img = BitmapFactory.decodeResource(resources, R.drawable.mj)
-    val imgArt = musicListPA[songPosition].path?.let { getImgArt(it) }
+    var img = BitmapFactory.decodeResource(resources, R.drawable.musicanote)
+    val imgArt = musicListPA[songPosition].path.let { getImgArt(it) }
      if (imgArt != null) {
          img = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
      }
         val notification = NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
              .setContentTitle(musicListPA[songPosition].title)
              .setContentText(musicListPA[songPosition].artist)
-             .setSmallIcon(R.drawable.favourites)
+             .setSmallIcon(R.drawable.ic_baseline_disc_full_24)
              .setLargeIcon(img)
              .setStyle(
                  androidx.media.app.NotificationCompat.MediaStyle()
@@ -104,7 +103,6 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     fun readPlayListNameFromDB(){
         val SongDao = MusicDatabase.getDatabase(application).songDao()
         GlobalScope.launch(Dispatchers.IO) {
-           // val songDao = SongDao.readDistinctNames() as MutableList<String>
             playlist = SongDao.readDistinctNames() as MutableList<String>
             if(playlist.contains("favourites")){
                 playlist.remove("favourites")
@@ -123,10 +121,17 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     fun readPlaylistSongs(name:String){
         GlobalScope.launch(Dispatchers.IO) {
             val SongDao = MusicDatabase.getDatabase(application).songDao()
-            playlistMusic = SongDao.readAllSongsFromPlaylist(name) as MutableList<String>
-            //Todo
-            playlist = playlistMusic
+            playlistMusic = SongDao.readAllSongsFromPlaylist(name)
+            withContext(Dispatchers.Main){
+                songsInsidePlaylist = emptyList()
+                songsInsidePlaylist = playlistMusic
+            }
         }
+    }
+    fun deleteAllSongsInPlaylist(adapterPosition:Int){
+        val songDao = MusicDatabase.getDatabase(application).songDao()
+        songDao.deleteAllSongs(playlistM[adapterPosition])
+        playlistM.removeAt(adapterPosition)
     }
 
     fun createMediaPlayer() {
@@ -176,10 +181,10 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
                     --songPosition
             }
     }
+
     //playmusic:ArrayList<Music>,intex:Int
 
     fun playMusic() {
-        Log.d("play", "playmusic")
         playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
         playerActivity?.isPlaying = true
         mediaPlayer!!.start()

@@ -20,7 +20,12 @@ interface MusicDao {
     @Query("SELECT  DISTINCT playListName  FROM `Musictable`")
     fun readDistinctNames(): List<String>
 
+    @Query("SELECT * FROM `Musictable` WHERE playListName LIKE :name  AND Id LIKE :idOfSong")
+    fun checkingSongsInPlaylist(idOfSong: Int?, name: String?): Boolean
+
     @Query("SELECT * FROM `Musictable` WHERE playListName LIKE :name")
     fun readAllSongsFromPlaylist(name: String): List<Music>
 
+    @Query("DELETE FROM `Musictable` WHERE playListName LIKE :name")
+    fun deleteAllSongs(name: String)
 }

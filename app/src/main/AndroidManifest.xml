@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.shinto.mcplayer">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".ApplicationClass"
@@ -16,35 +16,45 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.McPlayer">
         <activity
+            android:name=".SongsInPlaylist"
+            android:exported="true" />
+        <activity
+            android:label="Playlist"
             android:name=".Playlist_screen"
-            android:screenOrientation="portrait"
             android:exported="true"
+            android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
+            android:label="Favourite"
             android:name=".Favourite"
-            android:screenOrientation="portrait"
             android:exported="true"
-            tools:ignore="LockedOrientationActivity"
-            />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".Player_activity"
-            android:screenOrientation="portrait"
             android:exported="true"
-            tools:ignore="LockedOrientationActivity"
-            />
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".MainActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity"
-            android:exported="true">
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".MusicService"/>
-        <receiver android:name=".NotificationReciever"
-            android:enabled="true"/>
+
+        <service android:name=".MusicService" />
+
+        <receiver
+            android:name=".NotificationReciever"
+            android:enabled="true" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

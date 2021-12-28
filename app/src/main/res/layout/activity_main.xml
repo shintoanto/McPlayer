@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E5E5E5"
     tools:openDrawer="start"
     tools:context=".MainActivity">
 
@@ -20,31 +21,31 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <Button
                     android:id="@+id/shufflebtn"
+                    style="@style/Widget.AppCompat.Button.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="shuffle"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:drawableTop="@drawable/shuffle"/>
+                    android:fontFamily="More Fonts..."
+                    android:text="shuffle" />
                 <Button
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:fontFamily="More Fonts..."
                     android:id="@+id/favPageBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="shuffle"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:drawableTop="@drawable/favourites"/>
+                    android:text="Favourites" />
                 <Button
-                    android:id="@+id/btnTotalSongs"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:fontFamily="More Fonts..."
+                    android:id="@+id/btnPlaylist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TotalSongs"
-                    android:textColor="#46AC3B"
-                    style="@style/Widget.AppCompat.Button.Borderless"
-                    android:drawableTop="@drawable/playlist"/>
+                    android:text="Playlist" />
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/musicRv"

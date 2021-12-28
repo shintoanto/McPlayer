@@ -14,7 +14,6 @@ class Playlist_screen : AppCompatActivity(),ServiceConnection {
 
     private lateinit var binding: ActivityPlaylistScreenBinding
     private lateinit var adapter: PlaylistAdapter
-    private lateinit var playlistMA:ArrayList<Music>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,9 +23,10 @@ class Playlist_screen : AppCompatActivity(),ServiceConnection {
         binding.favouritesRV.setHasFixedSize(true)
         binding.favouritesRV.setItemViewCacheSize(13)
         binding.favouritesRV.layoutManager = GridLayoutManager(this,3)
-        adapter = PlaylistAdapter(this@Playlist_screen,playlistMA)
+        adapter = PlaylistAdapter(this@Playlist_screen, playlistM)
         binding.favouritesRV.adapter = adapter
     }
+
     private fun readAllPlaylistSongs(){
         musicService!!.readPlaylistSongs("name")
     }
