@@ -100,15 +100,17 @@ class NowPlaying : Fragment(),MediaPlayer.OnCompletionListener,ServiceConnection
 
     override fun onResume() {
         super.onResume()
-        if (musicService != null) {
+        if (musicService != null || (musicService != null && musicService!!.songPosition != -1)) {
+            Log.d("out","its is inside")
             binding.root.visibility = View.VISIBLE
             binding.songNameMp.isSelected = true
-
-            Glide.with(this).load(musicService!!.musicListPA[musicService!!.songPosition].artUri)
-                .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
-                    // Imag setting
-                into(binding.songImgNp)
-            binding.songNameMp.text = musicService!!.musicListPA[musicService?.songPosition!!].title
+            if(musicService!!.musicListPA.isNotEmpty()){
+                Glide.with(this).load(musicService!!.musicListPA[musicService!!.songPosition].artUri)
+                    .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
+                        // Imag setting
+                    into(binding.songImgNp)
+                binding.songNameMp.text = musicService!!.musicListPA[musicService?.songPosition!!].title
+            }
             seekBarSetupN()
 
 //            if (playerActivity?.isPlaying!!)

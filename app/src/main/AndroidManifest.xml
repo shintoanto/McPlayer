@@ -16,18 +16,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.McPlayer">
         <activity
+            android:name=".Splashscreen"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".SongsInPlaylist"
             android:exported="true" />
         <activity
-            android:label="Playlist"
             android:name=".Playlist_screen"
             android:exported="true"
+            android:label="Playlist"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:label="Favourite"
             android:name=".Favourite"
             android:exported="true"
+            android:label="Favourite"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
@@ -40,11 +50,11 @@
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
         </activity>
 
         <service android:name=".MusicService" />
@@ -52,6 +62,7 @@
         <receiver
             android:name=".NotificationReciever"
             android:enabled="true" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

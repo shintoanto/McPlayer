@@ -1,7 +1,7 @@
 package com.shinto.mcplayer
 
-
 import android.app.Activity
+import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.startForegroundService
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shinto.mcplayer.databinding.ActivityMainBinding
 import java.io.File
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
 
         // service started
         val int = Intent(this,MusicService::class.java)
-        startForegroundService(Intent(this,MusicService::class.java))
+        startService(Intent(this,MusicService::class.java))
        // startService(Intent(this,MusicService::class.java))
         bindService(int,this, Context.BIND_AUTO_CREATE)
 
@@ -110,7 +111,6 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
 
         // pass the activity to music adapter
         musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
-        Log.d("music",musicAdapter.toString())
         binding.musicRv.adapter = musicAdapter
       //  binding.btnTotalSongs.text = "Total songs:" + musicAdapter.itemCount
     }
@@ -174,6 +174,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
             MediaStore.Audio.Media.DATA,
             MediaStore.Audio.Media.ALBUM_ID
         )
+
 //        val cursor = this.contentResolver.query(
 //            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
 //            selection, null, MediaStore.Audio.Media.DATE_ADDED + "DESC", null
@@ -226,7 +227,6 @@ class MainActivity : AppCompatActivity(),ServiceConnection{
         val binder = p1 as MusicService.MyBinder
         musicService = binder.currentService()
         musicService!!.musicListPA = getAllAudio()
-        Log.i("musicsa", musicService?.musicListPA.toString())
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {

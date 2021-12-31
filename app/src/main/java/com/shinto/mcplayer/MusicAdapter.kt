@@ -27,11 +27,10 @@ class MusicAdapter(private val context: Context, private val musicList: MutableL
      private lateinit var songDao:MusicDao
      var listOfMusic= musicList
      private lateinit var playlistAdapter: PlaylistAdapter
-     private lateinit var main:MainActivity
 
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songNameMV
-        val album = binding.songAlbumMV
+      //  val album = binding.songAlbumMV
         val duration = binding.songDuration
         val image = binding.imageMV
         val root = binding.root
@@ -44,7 +43,7 @@ class MusicAdapter(private val context: Context, private val musicList: MutableL
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.title.text = listOfMusic[position].title
-        holder.album.text = listOfMusic[position].album
+       // holder.album.text = listOfMusic[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
         holder.threeDot.setOnClickListener {
             showPop(it,position)
@@ -115,7 +114,7 @@ class MusicAdapter(private val context: Context, private val musicList: MutableL
                             Log.d("this", isChecked.toString())
                             withContext(Dispatchers.IO) {
                                 if (isChecked) {
-                                    main.toast(context,"this is something")
+                                //    main.toast(context,"this is something")
                                     dialog.dismiss()
                                 } else {
                                     listOfMusic[adapterPosion].playListName = name
@@ -127,7 +126,7 @@ class MusicAdapter(private val context: Context, private val musicList: MutableL
                                         listOfMusic.remove(listOfMusic[adapterPosion])
                                     }
                                     addTooPlaylist(adapterPosion)
-                                  main.toast(context,"this is added to the playlist")
+                                //  main.toast(context,"this is added to the playlist")
                                     dialog.dismiss()
                                 }
                                 playlistAdapter = PlaylistAdapter(context, playlistM)

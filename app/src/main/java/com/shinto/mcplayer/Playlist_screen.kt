@@ -22,7 +22,7 @@ class Playlist_screen : AppCompatActivity(),ServiceConnection {
 
         binding.favouritesRV.setHasFixedSize(true)
         binding.favouritesRV.setItemViewCacheSize(13)
-        binding.favouritesRV.layoutManager = GridLayoutManager(this,3)
+        binding.favouritesRV.layoutManager = GridLayoutManager(this,2)
         adapter = PlaylistAdapter(this@Playlist_screen, playlistM)
         binding.favouritesRV.adapter = adapter
     }

@@ -185,7 +185,20 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
                 val intent = Intent(this,MusicService::class.java)
                 this.bindService(intent,this, BIND_AUTO_CREATE)
                 this.startService(intent)
-                createMediaPlayer()
+                musicService?.musicListPA?.addAll(musicService!!.songsInsidePlaylist)
+                //createMediaPlayer()
+
+//                    GlobalScope.launch(Dispatchers.IO) {
+//                        val SongDao = MusicDatabase.getDatabase(application).songDao()
+//                        musicService!!.playlistMusic = SongDao.readAllSongsFromPlaylist("shinto")
+//                        withContext(Dispatchers.Main){
+//                            musicService!!.songsInsidePlaylist = emptyList()
+//                            musicService!!.songsInsidePlaylist = musicService!!.playlistMusic
+//                            musicService?.musicListPA?.addAll(musicService!!.songsInsidePlaylist)
+//                        }
+//                    }
+
+
             }
 //            "Favourites" ->{
 //                val intent = Intent(this,MusicService::class.java)
@@ -251,10 +264,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             isPlaying = true
             binding.playPauseButton.setIconResource(R.drawable.pause)
             musicService!!.showNotification(R.drawable.pause)
-            binding.seekBarStartPA.text =
-                formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
-            binding.seekBarEndPA.text =
-                formatDuration(musicService?.mediaPlayer!!.duration.toLong())
+            binding.seekBarStartPA.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
             binding.seekBarPA.progress = 0
             binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
 //            musicService!!.mediaPlayer!!.setOnCompletionListener {
@@ -318,6 +329,28 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             setLayout()
         } catch (e: Exception) {
             return
+        }
+    }
+    private fun newPlaylistIdPassing(){
+        if (musicService!!.songPosition.equals(musicService!!.songsInsidePlaylist[musicService!!.songPosition].id))
+        musicService!!.songPosition = intent.getIntExtra("songId",musicService!!.songsInsidePlaylist[musicService!!.songPosition].id)
+        when(intent.getStringExtra("class")){
+            "SongsInPlaylistAdapter"->{
+                val intent = Intent(this,MusicService::class.java)
+                this.bindService(intent,this, BIND_AUTO_CREATE)
+                this.startService(intent)
+                //createMediaPlayer()
+
+                GlobalScope.launch(Dispatchers.IO) {
+                    val SongDao = MusicDatabase.getDatabase(application).songDao()
+                    musicService!!.playlistMusic = SongDao.readAllSongsFromPlaylist("shinto")
+                    withContext(Dispatchers.Main){
+                        musicService!!.songsInsidePlaylist = emptyList()
+                        musicService!!.songsInsidePlaylist = musicService!!.playlistMusic
+                        musicService?.musicListPA?.addAll(musicService!!.songsInsidePlaylist)
+                    }
+                }
+            }
         }
     }
 

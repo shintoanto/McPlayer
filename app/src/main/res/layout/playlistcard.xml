@@ -9,26 +9,27 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="vertical"
-        android:background="@color/teal_200"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
+            android:background="@drawable/gradient"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-           >
+            android:gravity="center_vertical"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/songNamePlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:padding="10dp"
                 android:text="Playlist Name"
-                android:textColor="#3F51B5"
+                android:textColor="#FBF8F8"
                 android:textSize="22sp" />
 
         </RelativeLayout>

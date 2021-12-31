@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shinto.mcplayer.databinding.ActivityFavouriteBinding
 
 class Favourite : AppCompatActivity(),ServiceConnection {
@@ -28,7 +29,7 @@ class Favourite : AppCompatActivity(),ServiceConnection {
       //  tempList.add("song 1")
         binding.favouritesRV.setHasFixedSize(true)
         binding.favouritesRV.setItemViewCacheSize(13)
-        binding.favouritesRV.layoutManager = GridLayoutManager(this,3)
+        binding.favouritesRV.layoutManager = LinearLayoutManager(applicationContext)
         adapter = FavouriteAdapter(this@Favourite, tempList)
         binding.favouritesRV.adapter = adapter
     }

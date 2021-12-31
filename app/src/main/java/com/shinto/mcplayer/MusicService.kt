@@ -40,7 +40,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     var favMusic:List<Music> = mutableListOf()
     var playerActivity:Player_activity?=null
     var binding:FragmentNowPlayingBinding?=null
-   var musicListPA= arrayListOf<Music>()
+   var musicListPA= mutableListOf<Music>()
     var playlist=mutableListOf<String>()
      lateinit var playlistMusic: List<Music>
      lateinit var songsInsidePlaylist:List<Music>
@@ -48,17 +48,20 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     // Media button on API 8+
     override fun onBind(p0: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
+        Log.d("v","onBind")
         return myBinder
         }
 
     // Pass the context
     inner class MyBinder : Binder() {
         fun currentService(): MusicService {
+            Log.d("v","innerClass")
             return this@MusicService
         }
     }
 
     fun showNotification(playPauseButton:Int) {
+        Log.d("v","showNotification")
 
         val prevIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.PREVIOUS)
         val prevPendingIntent = PendingIntent.getBroadcast(baseContext,0,prevIntent,PendingIntent.FLAG_UPDATE_CURRENT)
@@ -101,6 +104,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     }
 
     fun readPlayListNameFromDB(){
+        Log.d("v","readPlaylistNameFromDB")
         val SongDao = MusicDatabase.getDatabase(application).songDao()
         GlobalScope.launch(Dispatchers.IO) {
             playlist = SongDao.readDistinctNames() as MutableList<String>
@@ -111,6 +115,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     }
 
     fun readFavSongs(favourite:String){
+        Log.d("v","readFavSongs")
         GlobalScope.launch(Dispatchers.IO) {
             val SongDao = MusicDatabase.getDatabase(application).songDao()
             favPlaylist = SongDao.readAllData(favourite)
@@ -119,6 +124,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     }
 
     fun readPlaylistSongs(name:String){
+        Log.d("v","readPlaylistSongs")
         GlobalScope.launch(Dispatchers.IO) {
             val SongDao = MusicDatabase.getDatabase(application).songDao()
             playlistMusic = SongDao.readAllSongsFromPlaylist(name)
@@ -128,7 +134,9 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
             }
         }
     }
+
     fun deleteAllSongsInPlaylist(adapterPosition:Int){
+        Log.d("v","deleteAllSongsInPlaylist")
         val songDao = MusicDatabase.getDatabase(application).songDao()
         songDao.deleteAllSongs(playlistM[adapterPosition])
         playlistM.removeAt(adapterPosition)
@@ -136,6 +144,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
 
     fun createMediaPlayer() {
         try {
+            Log.d("v","createMediaPlayaer")
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
             musicService!!.mediaPlayer!!.reset()
             musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
@@ -152,6 +161,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     }
 
      fun prevNextBtn(increment: Boolean,callback:()->Unit) {
+         Log.d("v","prevNextBtn")
         if (increment) {
             setSongPosition(increment = true)
             //   ++songPosition
@@ -169,6 +179,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     }
 
     fun setSongPosition(increment: Boolean) {
+        Log.d("v","setSongPosition")
             if (increment) {
                 if (musicService?.musicListPA!!.size - 1 == songPosition)
                     songPosition = 0
@@ -185,6 +196,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     //playmusic:ArrayList<Music>,intex:Int
 
     fun playMusic() {
+        Log.d("v","playMusic")
         playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
         playerActivity?.isPlaying = true
         mediaPlayer!!.start()
@@ -192,6 +204,7 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     }
 
 fun pauseMusic() {
+    Log.d("v","pauseMusic")
     playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.play)
     musicService!!.showNotification(R.drawable.play)
     musicService!!.mediaPlayer!!.pause()
@@ -218,6 +231,7 @@ fun pauseMusic() {
     }
 
     override fun onAudioFocusChange(p0: Int) {
+        Log.d("v","onAudioFocusChange")
         if (p0 <= 0){
             playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.play)
 //            nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.play)
