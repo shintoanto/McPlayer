@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme. Theme.MaterialComponents.DayNight.DarkActionBar-->
     <style name="Theme.McPlayer" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
@@ -14,7 +14,4 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="splash_screen_theme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/mj</item>
-    </style>
 </resources>

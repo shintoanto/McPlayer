@@ -15,7 +15,7 @@
         android:layout_marginEnd="50dp"
         android:maxLines="1"
         android:text="song name"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:fontFamily="@font/acme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
         android:maxLines="1"
         android:fontFamily="@font/acme"
         android:text="Duration"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -50,8 +50,8 @@
 
     <ImageButton
         android:id="@+id/popUp"
-        android:layout_width="15dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:background="#0CF8F4F4"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -10,6 +10,7 @@
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@color/purple_500"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -49,6 +50,7 @@
                     android:text="Playlist" />
             </LinearLayout>
             <androidx.recyclerview.widget.RecyclerView
+                android:background="@drawable/backgrounds"
                 android:id="@+id/musicRv"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -61,6 +63,7 @@
             android:name="com.shinto.mcplayer.NowPlaying"
             tools:layout="@layout/fragment_now_playing"
             app:layout_constraintEnd_toEndOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -71,5 +74,6 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/nav_menu"
         android:layout_height="match_parent"/>
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

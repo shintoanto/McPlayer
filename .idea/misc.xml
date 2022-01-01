@@ -4,20 +4,33 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../layout/custom_preview.xml" value="0.1814814814814815" />
+        <entry key="app/src/main/res/drawable/backgrounds.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/border.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/custom_styles.xml" value="0.17314814814814813" />
+        <entry key="app/src/main/res/drawable/favourite.xml" value="0.18055555555555555" />
+        <entry key="app/src/main/res/drawable/favourites.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/gradient.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/heartholow.xml" value="0.17685185185185184" />
+        <entry key="app/src/main/res/drawable/ic_baseline_pause.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/menu.xml" value="0.17777777777777778" />
         <entry key="app/src/main/res/drawable/musicdisc.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/next.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/nowbackground.xml" value="0.11458333333333333" />
+        <entry key="app/src/main/res/drawable/pause.xml" value="0.1953125" />
+        <entry key="app/src/main/res/drawable/play.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/popup.xml" value="0.10555555555555556" />
+        <entry key="app/src/main/res/drawable/prev.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/previews.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/repeat.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/share.xml" value="0.2109375" />
         <entry key="app/src/main/res/drawable/splash_screen.xml" value="0.2109375" />
+        <entry key="app/src/main/res/drawable/timer.xml" value="0.2109375" />
         <entry key="app/src/main/res/font/acme.xml" value="0.17222222222222222" />
         <entry key="app/src/main/res/font/fonts.xml" value="0.225" />
         <entry key="app/src/main/res/layout-v28/activity_player.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/activity_favourite.xml" value="0.4035476718403548" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.15" />
-        <entry key="app/src/main/res/layout/activity_player.xml" value="0.19479166666666667" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.12244897959183673" />
+        <entry key="app/src/main/res/layout/activity_player.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_playlist_screen.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_songs_in_playlist.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/activity_splashscreen.xml" value="0.22" />

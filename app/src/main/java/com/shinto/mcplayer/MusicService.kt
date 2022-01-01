@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Icon
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
@@ -149,7 +150,8 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
             musicService!!.mediaPlayer!!.reset()
             musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
             musicService!!.mediaPlayer!!.prepare()
-            playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
+       //     playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
+            playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.pause)
             playerActivity?.binding?.seekBarStartPA?.text = formatDuration(mediaPlayer!!.currentPosition.toLong())
             playerActivity?.binding?.seekBarEndPA?.text = formatDuration(mediaPlayer!!.duration.toLong())
             playerActivity?.binding?.seekBarPA?.progress = 0
@@ -196,18 +198,16 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     //playmusic:ArrayList<Music>,intex:Int
 
     fun playMusic() {
-        Log.d("v","playMusic")
-        playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
+        playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.pause)
         playerActivity?.isPlaying = true
         mediaPlayer!!.start()
         showNotification(R.drawable.pause)
     }
 
 fun pauseMusic() {
-    Log.d("v","pauseMusic")
-    playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.play)
-    musicService!!.showNotification(R.drawable.play)
-    musicService!!.mediaPlayer!!.pause()
+    playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.play)
+    showNotification(R.drawable.play)
+    mediaPlayer!!.pause()
     playerActivity?.isPlaying = false
 }
 
@@ -231,16 +231,15 @@ fun pauseMusic() {
     }
 
     override fun onAudioFocusChange(p0: Int) {
-        Log.d("v","onAudioFocusChange")
         if (p0 <= 0){
-            playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.play)
-//            nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.play)
+            playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.play)
+            nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.play)
             musicService!!.showNotification(R.drawable.play)
-            musicService!!.mediaPlayer!!.pause()
+            mediaPlayer!!.pause()
             playerActivity?.isPlaying = false
         }else{
-            playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
-//            nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.pause)
+            playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.pause)
+            nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.pause)
             playerActivity?.isPlaying = true
             mediaPlayer!!.start()
             showNotification(R.drawable.pause)

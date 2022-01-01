@@ -1,149 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#E5E5E5"
+    android:background="@drawable/backgrounds"
     tools:context=".Player_activity">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/idFavBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/favourites" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="world"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <ImageButton
-            android:id="@+id/playlistBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/playlist" />
-
-    </LinearLayout>
-<!--current song image-->
 
 
     <!--current song name-->
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImgPA"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="250dp" />
+        android:layout_height="365dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="68dp"
+        android:padding="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/songNamePA"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:layout_marginTop="30dp"
         android:id="@+id/songNamePA"
-        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/acme"
         android:text="song name"
         android:textAlignment="center"
-        android:textSize="18sp" />
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/songImgPA" />
 
     <LinearLayout
-        android:layout_marginTop="30dp"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-<!--       Previous button -->
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            app:icon="@drawable/previews"
+        <!--       Previous button -->
+
+        <ImageView
             android:id="@+id/previewsBtnPA"
-            app:shapeAppearance="@style/curved"
-            app:strokeColor="#5E78D8" />
+            android:layout_width="42dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/previews" />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:layout_width="30dp"
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:id="@+id/playPauseButton"
+            android:layout_width="42dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="25dp"
-            app:icon="@drawable/play"
-            app:shapeAppearance="@style/curved" />
+            android:src="@drawable/play" />
 
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:layout_width="30dp"
+        <ImageView
             android:id="@+id/nextBtnPA"
+            android:layout_width="42dp"
             android:layout_height="wrap_content"
-            app:icon="@drawable/next" />
+            android:src="@drawable/next" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="23dp"
         android:layout_weight="1"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/seekBarStartPA"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="00:00"
+            android:fontFamily="@font/acme"
             android:gravity="center"
-            android:textColor="#CF1E1E"
+            android:text="00:00"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatSeekBar
-            android:layout_width="0dp"
             android:id="@+id/seekBarPA"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            tools:ignore="NestedWeights" />
+            tools:ignore="NestedWeights"
+            tools:layout_editor_absoluteX="41dp"
+            tools:layout_editor_absoluteY="643dp" />
 
         <TextView
             android:id="@+id/seekBarEndPA"
             android:layout_width="wrap_content"
-            android:text="00:00"
-            android:gravity="center"
             android:layout_height="wrap_content"
-            android:textColor="#BC0E0E"
+            android:fontFamily="@font/acme"
+            android:gravity="center"
+            android:text="00:00"
+            android:textColor="@color/white"
             android:textSize="15sp" />
     </LinearLayout>
-    
+
     <LinearLayout
-        android:orientation="horizontal"
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="31dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
+        <ImageView
+            android:id="@+id/idFavBtn"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/favourites" />
+
+        <ImageView
             android:id="@+id/repeatBtnPA"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/repeat"/>
+            android:src="@drawable/repeat" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/timerBtnPA"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
+            app:tint="?attr/colorControlNormal"
             android:layout_height="wrap_content"
-            android:src="@drawable/timer"/>
-        <ImageButton
+            android:src="@drawable/timer" />
+
+        <ImageView
             android:id="@+id/sendBtnPA"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/share"/>
+            android:src="@drawable/share" />
     </LinearLayout>
 
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

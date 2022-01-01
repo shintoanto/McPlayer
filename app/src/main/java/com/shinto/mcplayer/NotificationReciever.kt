@@ -28,7 +28,7 @@ class NotificationReciever : BroadcastReceiver() {
         playerActivity?.isPlaying = true
         musicService!!.mediaPlayer!!.start()
         musicService!!.showNotification(R.drawable.pause)
-        playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
+        playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.pause)
         nowPlaying?.binding?.playPauseBtn?.setImageResource(R.drawable.pause)
     }
 
@@ -36,9 +36,8 @@ class NotificationReciever : BroadcastReceiver() {
         playerActivity?.isPlaying = false
         musicService!!.mediaPlayer!!.pause()
         musicService!!.showNotification(R.drawable.play)
-        playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.play)
+        playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.play)
         nowPlaying?.binding?.playPauseBtn?.setImageResource(R.drawable.play)
-
     }
 //  private  fun setLayout() {
 //      //It shows the information in player activity place

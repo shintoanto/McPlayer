@@ -78,28 +78,6 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         // starting service
         initializeLayout()
 
-        binding.timerBtnPA.setOnClickListener {
-            val timer = min15 || min30 || min60
-            if (!timer) bottomSheetDialogue()
-            else {
-                val builder = MaterialAlertDialogBuilder(this)
-                builder.setTitle("Exit")
-                    .setMessage("Do you want to close this app")
-                    .setPositiveButton("Yes") { _, _ ->
-                        min15 = false
-                        min30 = false
-                        min60 = false
-                    }
-                    .setNegativeButton("No") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                val customDialogue = builder.create()
-                customDialogue.show()
-                customDialogue.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-                customDialogue.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
-            }
-        }
-
         binding.sendBtnPA.setOnClickListener {
             val sharIntent = Intent()
             sharIntent.action = Intent.ACTION_SEND
@@ -109,6 +87,9 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
                 Uri.parse(musicService?.musicListPA!![musicService?.songPosition!!].path)
             )
             startActivity(Intent.createChooser(sharIntent, "Music file sending"))
+        }
+        binding.timerBtnPA.setOnClickListener {
+            timerFunction()
         }
 
         binding.playPauseButton.setOnClickListener {
@@ -169,8 +150,8 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
                 binding.seekBarEndPA.text =formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
                 binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
                 binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
-                if (isPlaying) binding.playPauseButton.setIconResource(R.drawable.pause)
-                else binding.playPauseButton.setIconResource(R.drawable.play)
+                if (isPlaying) binding.playPauseButton.setImageResource(R.drawable.pause)
+                else binding.playPauseButton.setImageResource(R.drawable.play)
             }
             "MusicAdapter" -> {
                 val intent = Intent(this, MusicService::class.java)
@@ -217,7 +198,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 
     fun setLayout() {
         Glide.with(this).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
-            .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
+            .apply(RequestOptions().placeholder(R.drawable.music).centerCrop()).
             into(binding.songImgPA)
         binding.songNamePA.text = musicService?.musicListPA!![musicService?.songPosition!!].title
         if (musicService!!.repeat) binding.repeatBtnPA.setColorFilter(
@@ -262,7 +243,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             musicService!!.mediaPlayer!!.prepare()
             musicService!!.mediaPlayer!!.start()
             isPlaying = true
-            binding.playPauseButton.setIconResource(R.drawable.pause)
+            binding.playPauseButton.setImageResource(R.drawable.pause)
             musicService!!.showNotification(R.drawable.pause)
             binding.seekBarStartPA.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
             binding.seekBarEndPA.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
@@ -304,6 +285,27 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+    }
+   private  fun timerFunction(){
+         val timer = min15 || min30 || min60
+            if (!timer) bottomSheetDialogue()
+            else {
+                val builder = MaterialAlertDialogBuilder(this)
+                builder.setTitle("Exit")
+                    .setMessage("Do you want to close this app")
+                    .setPositiveButton("Yes") { _, _ ->
+                        min15 = false
+                        min30 = false
+                        min60 = false
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                val customDialogue = builder.create()
+                customDialogue.show()
+                customDialogue.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+                customDialogue.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+            }
     }
 
 //    private fun prevNextBtn(increment: Boolean) {
@@ -414,7 +416,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
     }
 
     private fun removeFavourites() {
-        binding.idFavBtn.setImageResource(R.drawable.heartholow)
+        binding.idFavBtn.setImageResource(R.drawable.favourites)
         CoroutineScope(Dispatchers.IO).launch {
             musicDao.removeMusic(musicService?.musicListPA!![musicService!!.songPosition])
             musicService?.favMusic = emptyList()
@@ -440,7 +442,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
                 return true
             }
         }
-        binding.idFavBtn.setImageResource(R.drawable.heartholow)
+        binding.idFavBtn.setImageResource(R.drawable.favourites)
         return false
     }
 

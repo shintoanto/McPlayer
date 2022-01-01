@@ -106,7 +106,7 @@ class NowPlaying : Fragment(),MediaPlayer.OnCompletionListener,ServiceConnection
             binding.songNameMp.isSelected = true
             if(musicService!!.musicListPA.isNotEmpty()){
                 Glide.with(this).load(musicService!!.musicListPA[musicService!!.songPosition].artUri)
-                    .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
+                    .apply(RequestOptions().placeholder(R.drawable.musicanote).centerCrop()).
                         // Imag setting
                     into(binding.songImgNp)
                 binding.songNameMp.text = musicService!!.musicListPA[musicService?.songPosition!!].title
