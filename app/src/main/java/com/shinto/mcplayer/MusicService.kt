@@ -6,28 +6,20 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Icon
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Binder
-import android.os.Handler
 import android.os.IBinder
-import android.os.Looper
-import android.provider.Settings
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.shinto.mcplayer.databinding.ActivityPlayerBinding
 import com.shinto.mcplayer.databinding.FragmentNowPlayingBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChangeListener {
+class MusicService : Service(), ServiceConnection, AudioManager.OnAudioFocusChangeListener {
     var nowPlaying: NowPlaying? = null
     lateinit var audioManager: AudioManager
     private var myBinder = MyBinder()
@@ -37,86 +29,112 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
     var MusicListMA = arrayListOf<Music>()
     private lateinit var runnable: Runnable
     private lateinit var mediaSession: MediaSessionCompat
-    lateinit var favPlaylist : List<Music>
-    var favMusic:List<Music> = mutableListOf()
-    var playerActivity:Player_activity?=null
-    var binding:FragmentNowPlayingBinding?=null
-   var musicListPA= mutableListOf<Music>()
-    var playlist=mutableListOf<String>()
-     lateinit var playlistMusic: List<Music>
-     lateinit var songsInsidePlaylist:List<Music>
+    lateinit var favPlaylist: List<Music>
+    var favMusic: List<Music> = mutableListOf()
+    var playerActivity: Player_activity? = null
+    var binding: FragmentNowPlayingBinding? = null
+    var musicListPA = mutableListOf<Music>()
+    var playlist = mutableListOf<String>()
+    lateinit var playlistMusic: List<Music>
+    lateinit var songsInsidePlaylist: List<Music>
 
     // Media button on API 8+
     override fun onBind(p0: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
-        Log.d("v","onBind")
+        Log.d("v", "onBind")
         return myBinder
-        }
+    }
 
     // Pass the context
     inner class MyBinder : Binder() {
         fun currentService(): MusicService {
-            Log.d("v","innerClass")
+            Log.d("v", "innerClass")
             return this@MusicService
         }
     }
 
-    fun showNotification(playPauseButton:Int) {
-        Log.d("v","showNotification")
+    fun showNotification(playPauseButton: Int) {
+        Log.d("v", "showNotification")
 
-        val prevIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.PREVIOUS)
-        val prevPendingIntent = PendingIntent.getBroadcast(baseContext,0,prevIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val prevIntent = Intent(
+            baseContext,
+            NotificationReciever::class.java
+        ).setAction(ApplicationClass.PREVIOUS)
+        val prevPendingIntent = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            prevIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val nextIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.NEXT)
-        val nextPendingInt=PendingIntent.getBroadcast(baseContext,0,nextIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val nextIntent =
+            Intent(baseContext, NotificationReciever::class.java).setAction(ApplicationClass.NEXT)
+        val nextPendingInt = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            nextIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val playIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.PLAY)
-        val playPendingInt=PendingIntent.getBroadcast(baseContext,0,playIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val playIntent =
+            Intent(baseContext, NotificationReciever::class.java).setAction(ApplicationClass.PLAY)
+        val playPendingInt = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            playIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
-        val exitIntent=Intent(baseContext,NotificationReciever::class.java).setAction(ApplicationClass.EXIT)
-        val exitPendingInt=PendingIntent.getBroadcast(baseContext,0,exitIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+        val exitIntent =
+            Intent(baseContext, NotificationReciever::class.java).setAction(ApplicationClass.EXIT)
+        val exitPendingInt = PendingIntent.getBroadcast(
+            baseContext,
+            0,
+            exitIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
 
 
-    if(!musicListPA.isEmpty()){
-    var img = BitmapFactory.decodeResource(resources, R.drawable.musicanote)
-    val imgArt = musicListPA[songPosition].path.let { getImgArt(it) }
-     if (imgArt != null) {
-         img = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
-     }
-        val notification = NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
-             .setContentTitle(musicListPA[songPosition].title)
-             .setContentText(musicListPA[songPosition].artist)
-             .setSmallIcon(R.drawable.ic_baseline_disc_full_24)
-             .setLargeIcon(img)
-             .setStyle(
-                 androidx.media.app.NotificationCompat.MediaStyle()
-                     .setMediaSession(mediaSession.sessionToken)
-             )
-             .setPriority(NotificationCompat.PRIORITY_HIGH)
-             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-             .setOnlyAlertOnce(true)
-             .addAction(R.drawable.previews, "Previous", prevPendingIntent)
-             .addAction(playPauseButton, "Play", playPendingInt)
-             .addAction(R.drawable.next, "Next", nextPendingInt)
-             .addAction(R.drawable.close, "exit", exitPendingInt)
-             .build()
-         startForeground(13, notification)
-}
+        if (!musicListPA.isEmpty()) {
+            var img = BitmapFactory.decodeResource(resources, R.drawable.musicanote)
+            val imgArt = musicListPA[songPosition].path.let { getImgArt(it) }
+            if (imgArt != null) {
+                img = BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
+            }
+            val notification = NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
+                .setContentTitle(musicListPA[songPosition].title)
+                .setContentText(musicListPA[songPosition].artist)
+                .setSmallIcon(R.drawable.ic_baseline_disc_full_24)
+                .setLargeIcon(img)
+                .setStyle(
+                    androidx.media.app.NotificationCompat.MediaStyle()
+                        .setMediaSession(mediaSession.sessionToken)
+                )
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setOnlyAlertOnce(true)
+                .addAction(R.drawable.previews, "Previous", prevPendingIntent)
+                .addAction(playPauseButton, "Play", playPendingInt)
+                .addAction(R.drawable.next, "Next", nextPendingInt)
+                .addAction(R.drawable.close, "exit", exitPendingInt)
+                .build()
+            startForeground(13, notification)
+        }
     }
 
-    fun readPlayListNameFromDB(){
-        Log.d("v","readPlaylistNameFromDB")
+    fun readPlayListNameFromDB() {
+        Log.d("v", "readPlaylistNameFromDB")
         val SongDao = MusicDatabase.getDatabase(application).songDao()
         GlobalScope.launch(Dispatchers.IO) {
             playlist = SongDao.readDistinctNames() as MutableList<String>
-            if(playlist.contains("favourites")){
+            if (playlist.contains("favourites")) {
                 playlist.remove("favourites")
             }
         }
     }
 
-    fun readFavSongs(favourite:String){
-        Log.d("v","readFavSongs")
+    fun readFavSongs(favourite: String) {
+        Log.d("v", "readFavSongs")
         GlobalScope.launch(Dispatchers.IO) {
             val SongDao = MusicDatabase.getDatabase(application).songDao()
             favPlaylist = SongDao.readAllData(favourite)
@@ -124,20 +142,20 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
         }
     }
 
-    fun readPlaylistSongs(name:String){
-        Log.d("v","readPlaylistSongs")
+    fun readPlaylistSongs(name: String) {
+        Log.d("v", "readPlaylistSongs")
         GlobalScope.launch(Dispatchers.IO) {
             val SongDao = MusicDatabase.getDatabase(application).songDao()
             playlistMusic = SongDao.readAllSongsFromPlaylist(name)
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 songsInsidePlaylist = emptyList()
                 songsInsidePlaylist = playlistMusic
             }
         }
     }
 
-    fun deleteAllSongsInPlaylist(adapterPosition:Int){
-        Log.d("v","deleteAllSongsInPlaylist")
+    fun deleteAllSongsInPlaylist(adapterPosition: Int) {
+        Log.d("v", "deleteAllSongsInPlaylist")
         val songDao = MusicDatabase.getDatabase(application).songDao()
         songDao.deleteAllSongs(playlistM[adapterPosition])
         playlistM.removeAt(adapterPosition)
@@ -145,54 +163,56 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
 
     fun createMediaPlayer() {
         try {
-            Log.d("v","createMediaPlayaer")
+            Log.d("v", "createMediaPlayaer")
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
             musicService!!.mediaPlayer!!.reset()
             musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
             musicService!!.mediaPlayer!!.prepare()
-       //     playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
+            //     playerActivity?.binding?.playPauseButton?.setIconResource(R.drawable.pause)
             playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.pause)
-            playerActivity?.binding?.seekBarStartPA?.text = formatDuration(mediaPlayer!!.currentPosition.toLong())
-            playerActivity?.binding?.seekBarEndPA?.text = formatDuration(mediaPlayer!!.duration.toLong())
+            playerActivity?.binding?.seekBarStartPA?.text =
+                formatDuration(mediaPlayer!!.currentPosition.toLong())
+            playerActivity?.binding?.seekBarEndPA?.text =
+                formatDuration(mediaPlayer!!.duration.toLong())
             playerActivity?.binding?.seekBarPA?.progress = 0
             playerActivity?.binding?.seekBarPA?.max = mediaPlayer!!.duration
-            playerActivity?.nowPlayingId=musicListPA[songPosition].id.toString()
+            playerActivity?.nowPlayingId = musicListPA[songPosition].id.toString()
         } catch (e: Exception) {
             return
         }
     }
 
-     fun prevNextBtn(increment: Boolean,callback:()->Unit) {
-         Log.d("v","prevNextBtn")
+    fun prevNextBtn(increment: Boolean, callback: () -> Unit) {
+        Log.d("v", "prevNextBtn")
         if (increment) {
             setSongPosition(increment = true)
             //   ++songPosition
             createMediaPlayer()
             playMusic()
-           // playerActivity?.setLayout()
+            // playerActivity?.setLayout()
         } else {
             setSongPosition(increment = false)
-           //  --songPosition
+            //  --songPosition
             createMediaPlayer()
-           // playerActivity?.setLayout()
+            // playerActivity?.setLayout()
             playMusic()
         }
-         callback()
+        callback()
     }
 
     fun setSongPosition(increment: Boolean) {
-        Log.d("v","setSongPosition")
-            if (increment) {
-                if (musicService?.musicListPA!!.size - 1 == songPosition)
-                    songPosition = 0
-                else
-                    ++songPosition
-            } else {
-                if (0 == songPosition)
-                    songPosition = musicService?.musicListPA!!.size - 1
-                else
-                    --songPosition
-            }
+        Log.d("v", "setSongPosition")
+        if (increment) {
+            if (musicService?.musicListPA!!.size - 1 == songPosition)
+                songPosition = 0
+            else
+                ++songPosition
+        } else {
+            if (0 == songPosition)
+                songPosition = musicService?.musicListPA!!.size - 1
+            else
+                --songPosition
+        }
     }
 
     //playmusic:ArrayList<Music>,intex:Int
@@ -204,12 +224,12 @@ class MusicService : Service(),ServiceConnection,AudioManager.OnAudioFocusChange
         showNotification(R.drawable.pause)
     }
 
-fun pauseMusic() {
-    playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.play)
-    showNotification(R.drawable.play)
-    mediaPlayer!!.pause()
-    playerActivity?.isPlaying = false
-}
+    fun pauseMusic() {
+        playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.play)
+        showNotification(R.drawable.play)
+        mediaPlayer!!.pause()
+        playerActivity?.isPlaying = false
+    }
 
 //    fun pauseMusic() {
 //        Log.d("play", "pausemusic")
@@ -231,13 +251,13 @@ fun pauseMusic() {
     }
 
     override fun onAudioFocusChange(p0: Int) {
-        if (p0 <= 0){
+        if (p0 <= 0) {
             playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.play)
             nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.play)
             musicService!!.showNotification(R.drawable.play)
             mediaPlayer!!.pause()
             playerActivity?.isPlaying = false
-        }else{
+        } else {
             playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.pause)
             nowPlaying!!.binding.playPauseBtn.setImageResource(R.drawable.pause)
             playerActivity?.isPlaying = true

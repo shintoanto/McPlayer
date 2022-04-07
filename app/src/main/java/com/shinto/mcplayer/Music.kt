@@ -1,13 +1,11 @@
 package com.shinto.mcplayer
 
 import android.media.MediaMetadataRetriever
-import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
 import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.shinto.mcplayer.databinding.FragmentNowPlayingBinding
 import kotlinx.parcelize.Parcelize
 import java.util.concurrent.TimeUnit
 
@@ -17,46 +15,13 @@ data class Music(
     @PrimaryKey var timestamp: String,
     val id: Int,
     val title: String,
-    var playListName:String,
+    var playListName: String,
     val album: String,
     val artist: String,
     val duration: Long = 0,
     val path: String,
     val artUri: String
 ) : Parcelable
-//    : Parcelable {
-//    constructor(parcel: Parcel) : this(
-//        parcel.readInt(),
-//        parcel.readString(),
-//        parcel.readString(),
-//        parcel.readString(),
-//        parcel.readString(),
-//        parcel.readLong(),
-//        parcel.readString(),
-//        parcel.readString()
-//    ) {
-//    }
-
-//    override fun writeToParcel(parcel: Parcel, flags: Int) {
-//        parcel.writeInt(id!!)
-//        parcel.writeString(title)
-//        parcel.writeString(album)
-//        parcel.writeString(artist)
-//        parcel.writeLong(duration)
-//        parcel.writeString(path)
-//        parcel.writeString(artUri)
-//    }
-
-//    override fun describeContents(): Int = 0
-//
-//    companion object CREATOR : Parcelable.Creator<Music> {
-//        override fun createFromParcel(parcel: Parcel): Music = Music(parcel)
-//
-//        override fun newArray(size: Int): Array<Music?> = arrayOfNulls(size)
-//
-//    }
-//}
-//    :Parcelable
 
 var playerActivity: Player_activity? = null
 var musicService: MusicService? = null

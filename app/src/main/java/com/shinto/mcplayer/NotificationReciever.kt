@@ -3,10 +3,6 @@ package com.shinto.mcplayer
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.util.Log
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import kotlinx.coroutines.withContext
 
 class NotificationReciever : BroadcastReceiver() {
 
@@ -39,7 +35,8 @@ class NotificationReciever : BroadcastReceiver() {
         playerActivity?.binding?.playPauseButton?.setImageResource(R.drawable.play)
         nowPlaying?.binding?.playPauseBtn?.setImageResource(R.drawable.play)
     }
-//  private  fun setLayout() {
+
+    //  private  fun setLayout() {
 //      //It shows the information in player activity place
 //      Glide.with(view).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
 //          .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
@@ -51,7 +48,7 @@ class NotificationReciever : BroadcastReceiver() {
     private fun preNextSong(increment: Boolean, contex: Context) {
         musicService!!.setSongPosition(increment = increment)
         musicService!!.createMediaPlayer()
-       // setLayout()
+        // setLayout()
 //        Glide.with(contex).load(musicService!!.musicListPA[musicService?.songPosition!!].artUri)
 //            .apply(RequestOptions().placeholder(R.drawable.mj).centerCrop()).
 //                // Imag setting
@@ -66,6 +63,6 @@ class NotificationReciever : BroadcastReceiver() {
 //        nowPlaying?.binding?.songNameMp?.text =
 //            musicService!!.musicListPA[musicService!!.songPosition].title
         playMusic()
-        musicService!!.prevNextBtn(increment = increment,{})
+        musicService!!.prevNextBtn(increment = increment, {})
     }
 }

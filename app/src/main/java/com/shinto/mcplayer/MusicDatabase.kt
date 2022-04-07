@@ -1,7 +1,6 @@
 package com.shinto.mcplayer
 
 import android.content.Context
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -14,7 +13,7 @@ abstract class MusicDatabase : RoomDatabase() {
         @Volatile
         private var INSTANCE: MusicDatabase? = null
         fun getDatabase(context: Context): MusicDatabase {
-          //  if(INSTANCE == null)
+            //  if(INSTANCE == null)
             return INSTANCE ?: synchronized(this) {
 
                 val instance = Room.databaseBuilder(

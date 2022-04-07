@@ -1,7 +1,6 @@
 package com.shinto.mcplayer
 
 import android.app.Activity
-import android.app.Service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -10,23 +9,17 @@ import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
-import android.os.Message
 import android.provider.MediaStore
 import android.util.Log
-import android.view.MenuItem
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.startForegroundService
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shinto.mcplayer.databinding.ActivityMainBinding
 import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(),ServiceConnection{
 

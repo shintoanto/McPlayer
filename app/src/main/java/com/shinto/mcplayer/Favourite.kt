@@ -2,11 +2,9 @@ package com.shinto.mcplayer
 
 import android.content.ComponentName
 import android.content.ServiceConnection
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shinto.mcplayer.databinding.ActivityFavouriteBinding
 

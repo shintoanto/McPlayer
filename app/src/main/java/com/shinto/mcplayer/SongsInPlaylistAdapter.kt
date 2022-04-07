@@ -2,18 +2,14 @@ package com.shinto.mcplayer
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.shinto.mcplayer.databinding.ActivitySongsInPlaylistBinding
 import com.shinto.mcplayer.databinding.PlaylistSongsRvBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope

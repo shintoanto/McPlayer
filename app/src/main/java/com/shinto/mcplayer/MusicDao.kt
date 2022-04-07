@@ -9,7 +9,7 @@ import androidx.room.Query
 interface MusicDao {
 
     @Insert
-    fun addMusic(music:Music)
+    fun addMusic(music: Music)
 
     @Delete
     fun removeMusic(music: Music)

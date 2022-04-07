@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -18,9 +17,8 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
-import androidx.media.AudioManagerCompat.requestAudioFocus
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -129,9 +127,12 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
                 binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.teal_200))
             } else {
                 musicService!!.repeat = false
-                binding.repeatBtnPA.setColorFilter(ContextCompat.getColor(this,
-                    android.R.color.holo_red_dark
-                ))
+                binding.repeatBtnPA.setColorFilter(
+                    ContextCompat.getColor(
+                        this,
+                        android.R.color.holo_red_dark
+                    )
+                )
             }
         }
     }
@@ -146,8 +147,10 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         when (intent.getStringExtra("class")) {
             "NowPlaying" -> {
                 setLayout()
-                binding.seekBarStartPA.text = formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-                binding.seekBarEndPA.text =formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                binding.seekBarStartPA.text =
+                    formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+                binding.seekBarEndPA.text =
+                    formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
                 binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
                 binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
                 if (isPlaying) binding.playPauseButton.setImageResource(R.drawable.pause)
@@ -162,9 +165,9 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 //                Log.d("musicLoad",musicService!!.musicListPA[musicService!!.songPosition].title)
                 //   setLayout()
             }
-            "SongsInPlaylistAdapter"->{
-                val intent = Intent(this,MusicService::class.java)
-                this.bindService(intent,this, BIND_AUTO_CREATE)
+            "SongsInPlaylistAdapter" -> {
+                val intent = Intent(this, MusicService::class.java)
+                this.bindService(intent, this, BIND_AUTO_CREATE)
                 this.startService(intent)
                 musicService?.musicListPA?.addAll(musicService!!.songsInsidePlaylist)
                 //createMediaPlayer()
@@ -196,10 +199,10 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         }
     }
 
-    fun setLayout() {
+    private fun setLayout() {
         Glide.with(this).load(musicService?.musicListPA!![musicService?.songPosition!!].artUri)
-            .apply(RequestOptions().placeholder(R.drawable.music).centerCrop()).
-            into(binding.songImgPA)
+            .apply(RequestOptions().placeholder(R.drawable.music).centerCrop())
+            .into(binding.songImgPA)
         binding.songNamePA.text = musicService?.musicListPA!![musicService?.songPosition!!].title
         if (musicService!!.repeat) binding.repeatBtnPA.setColorFilter(
             ContextCompat.getColor(
@@ -245,8 +248,10 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             isPlaying = true
             binding.playPauseButton.setImageResource(R.drawable.pause)
             musicService!!.showNotification(R.drawable.pause)
-            binding.seekBarStartPA.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
-            binding.seekBarEndPA.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
+            binding.seekBarStartPA.text =
+                formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text =
+                formatDuration(musicService?.mediaPlayer!!.duration.toLong())
             binding.seekBarPA.progress = 0
             binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
 //            musicService!!.mediaPlayer!!.setOnCompletionListener {
@@ -268,7 +273,11 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         createMediaPlayer()
         //  checkFavSongAddOrRemove()
         musicService!!.audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        musicService!!.audioManager.requestAudioFocus(musicService,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)
+        musicService!!.audioManager.requestAudioFocus(
+            musicService,
+            AudioManager.STREAM_MUSIC,
+            AudioManager.AUDIOFOCUS_GAIN
+        )
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
@@ -278,34 +287,37 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
 
     private fun seekBarSetup() {
         runnable = Runnable {
-            binding.seekBarStartPA.text = formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
-            binding.seekBarEndPA.text = formatDuration(musicService?.mediaPlayer!!.duration.toLong())
+            binding.seekBarStartPA.text =
+                formatDuration(musicService?.mediaPlayer!!.currentPosition.toLong())
+            binding.seekBarEndPA.text =
+                formatDuration(musicService?.mediaPlayer!!.duration.toLong())
             binding.seekBarPA.progress = musicService?.mediaPlayer!!.currentPosition
             binding.seekBarPA.max = musicService?.mediaPlayer!!.duration
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
     }
-   private  fun timerFunction(){
-         val timer = min15 || min30 || min60
-            if (!timer) bottomSheetDialogue()
-            else {
-                val builder = MaterialAlertDialogBuilder(this)
-                builder.setTitle("Exit")
-                    .setMessage("Do you want to close this app")
-                    .setPositiveButton("Yes") { _, _ ->
-                        min15 = false
-                        min30 = false
-                        min60 = false
-                    }
-                    .setNegativeButton("No") { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                val customDialogue = builder.create()
-                customDialogue.show()
-                customDialogue.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-                customDialogue.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
-            }
+
+    private fun timerFunction() {
+        val timer = min15 || min30 || min60
+        if (!timer) bottomSheetDialogue()
+        else {
+            val builder = MaterialAlertDialogBuilder(this)
+            builder.setTitle("Exit")
+                .setMessage("Do you want to close this app")
+                .setPositiveButton("Yes") { _, _ ->
+                    min15 = false
+                    min30 = false
+                    min60 = false
+                }
+                .setNegativeButton("No") { dialog, _ ->
+                    dialog.dismiss()
+                }
+            val customDialogue = builder.create()
+            customDialogue.show()
+            customDialogue.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+            customDialogue.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+        }
     }
 
 //    private fun prevNextBtn(increment: Boolean) {
@@ -333,20 +345,24 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
             return
         }
     }
-    private fun newPlaylistIdPassing(){
+
+    private fun newPlaylistIdPassing() {
         if (musicService!!.songPosition.equals(musicService!!.songsInsidePlaylist[musicService!!.songPosition].id))
-        musicService!!.songPosition = intent.getIntExtra("songId",musicService!!.songsInsidePlaylist[musicService!!.songPosition].id)
-        when(intent.getStringExtra("class")){
-            "SongsInPlaylistAdapter"->{
-                val intent = Intent(this,MusicService::class.java)
-                this.bindService(intent,this, BIND_AUTO_CREATE)
+            musicService!!.songPosition = intent.getIntExtra(
+                "songId",
+                musicService!!.songsInsidePlaylist[musicService!!.songPosition].id
+            )
+        when (intent.getStringExtra("class")) {
+            "SongsInPlaylistAdapter" -> {
+                val intent = Intent(this, MusicService::class.java)
+                this.bindService(intent, this, BIND_AUTO_CREATE)
                 this.startService(intent)
                 //createMediaPlayer()
 
                 GlobalScope.launch(Dispatchers.IO) {
                     val SongDao = MusicDatabase.getDatabase(application).songDao()
                     musicService!!.playlistMusic = SongDao.readAllSongsFromPlaylist("shinto")
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         musicService!!.songsInsidePlaylist = emptyList()
                         musicService!!.songsInsidePlaylist = musicService!!.playlistMusic
                         musicService?.musicListPA?.addAll(musicService!!.songsInsidePlaylist)
@@ -404,12 +420,12 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
         }
     }
 
-    private fun addingToPlaylist(){
+    private fun addingToPlaylist() {
         System.currentTimeMillis()
         GlobalScope.launch(Dispatchers.IO) {
             musicService?.musicListPA!![musicService!!.songPosition].playListName = "name"
             musicDao.addMusic(musicService?.musicListPA!![musicService!!.songPosition])
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 musicService?.readPlaylistSongs("name")
             }
         }
@@ -425,7 +441,7 @@ class Player_activity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCo
     }
 
     private fun removePlaylists() {
-       // binding.idFavBtn.setImageResource(R.drawable.heartholow)
+        // binding.idFavBtn.setImageResource(R.drawable.heartholow)
         CoroutineScope(Dispatchers.IO).launch {
             musicDao.removeMusic(musicService?.musicListPA!![musicService!!.songPosition])
             musicService?.playlist = mutableListOf()
